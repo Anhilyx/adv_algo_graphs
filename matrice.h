@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 class Matrice
 {
@@ -39,6 +40,12 @@ public:
      */
     Matrice floydWarshall();
 
+    /**
+     * @brief Compute the clusters in the graph represented by the matrix, using the Kosaraju algorithm.
+     * @return An array of clusters, where each cluster is represented by an array of node indexes.
+     */
+    std::vector<std::vector<uint16_t>> kosaraju() const;
+
 private:
     /**
      * @brief The size of the matrix (size x size).
@@ -49,6 +56,27 @@ private:
      * @brief A 2D array of uint8_t representing the matrix data.
      */
     uint16_t** data;
+
+    /**
+     * @brief Helper function for depth-first search to find connected components.
+     * @param id The current node index.
+     * @param ordering The adjacency matrix representing the graph.
+     * @param visited An array to keep track of visited nodes.
+     * @param preCount A pointer to the count of nodes visited before the current node.
+     * @param postCount A pointer to the count of nodes visited after the current node.
+     * @return An array of node indexes in the connected component.
+     */
+    void dfs(uint16_t id, uint16_t** ordering, bool* visited,
+             uint16_t* preCount, uint16_t* postCount) const;
+
+    /**
+     * @brief Helper function for depth-first search to collect nodes in a cluster.
+     * @param id The current node index.
+     * @param cluster The vector to store the collected cluster nodes.
+     * @param visited An array to keep track of visited nodes.
+     */
+    void dfsCollect(uint16_t id, std::vector<uint16_t>& cluster, bool* visited,
+                    uint16_t* preCount, uint16_t* postCount) const;
 };
 
 #endif // MATRICE_H

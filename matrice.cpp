@@ -1,6 +1,7 @@
 #include "matrice.h"
 #include <fstream>
 #include <stdexcept>
+#include <vector>
 
 Matrice::Matrice(int size, uint16_t** data):
     size(size),
@@ -81,4 +82,117 @@ Matrice Matrice::floydWarshall()
     }
 
     return Matrice(size, paths);
+}
+
+std::vector<std::vector<uint16_t>> Matrice::kosaraju() const
+{
+    /******************
+    | Normal ordering |
+    ******************/
+
+    // Create values for the pre/post ordering calculation
+    uint16_t** ordering = new uint16_t*[size];
+    bool* visited = new bool[size];
+    for (uint16_t i = 0; i < size; i++) {
+        visited[i] = false;
+    }
+    uint16_t preCount = 0;
+    uint16_t postCount = 0;
+
+    // Perform DFS until all nodes are visited
+    while (preCount < size) {
+        // Find the next unvisited node
+        uint16_t next = 0;
+        while (next < size && visited[next]) {
+            next++;
+        }
+
+        // Perform a DFS from that node
+        dfs(next, ordering, visited, &preCount, &postCount);
+    }
+
+    /********************
+    | Inverted ordering |
+    ********************/
+
+    // Reset values for the cluster calculation
+    std::vector<std::vector<uint16_t>> clusters;
+    for (uint16_t i = 0; i < size; i++) {
+        visited[i] = false;
+    }
+    preCount = 0;
+    postCount = 0;
+
+    // Perform DFS until all nodes are visited
+    while (preCount < size) {
+        // Find the next unvisited node (with the highest post number)
+        uint16_t next = UINT16_MAX;
+        uint16_t maxPost = 0;
+        for (uint16_t i = 0; i < size; i++) {
+            if (!visited[i] && ordering[i][1] >= maxPost) {
+                next = i;
+                maxPost = ordering[i][1];
+            }
+        }
+
+        // Return if no more nodes
+        if (next == UINT16_MAX) break;
+
+        // Collect the cluster from that node
+        std::vector<uint16_t> currentCluster;
+        dfsCollect(next, currentCluster, visited, &preCount, &postCount);
+        if (!currentCluster.empty()) {
+            clusters.push_back(currentCluster);
+        }
+    }
+
+    /**********
+    | Cleanup |
+    **********/
+    
+    for (uint16_t i = 0; i < size; i++) {
+        delete[] ordering[i];
+    }
+    delete[] ordering;
+    delete[] visited;
+
+    return clusters;
+}
+
+void Matrice::dfs(uint16_t id, uint16_t** ordering, bool* visited,
+                  uint16_t* preCount, uint16_t* postCount) const
+{
+    // Mark the node as visited and set its pre-order number
+    visited[id] = true;
+    ordering[id] = new uint16_t[2];
+    ordering[id][0] = (*preCount)++;
+
+    // Visit all the neighbors
+    for (uint16_t i = 0; i < size; i++) {
+        if (data[id][i] != 0 && !visited[i]) {
+            dfs(i, ordering, visited, preCount, postCount);
+        }
+    }
+    
+    // Set the post-order number when all neighbors have been visited
+    ordering[id][1] = (*postCount)++;
+}
+
+void Matrice::dfsCollect(uint16_t id, std::vector<uint16_t>& cluster, bool* visited,
+                         uint16_t* preCount, uint16_t* postCount) const
+{
+    // Mark the node as visited and add it to the current cluster
+    visited[id] = true;
+    cluster.push_back(id);
+
+    // Visit all the neighbors
+    for (uint16_t i = 0; i < size; i++) {
+        if ((data[i][id] != 0) && !visited[i]) {
+            dfsCollect(i, cluster, visited, preCount, postCount);
+        }
+    }
+
+    // Increment pre/post count, to check completion
+    preCount++;
+    postCount++;
 }
