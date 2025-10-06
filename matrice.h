@@ -3,8 +3,6 @@
 
 #include <cstdint>
 #include <string>
-#include <fstream>
-#include <stdexcept>
 
 class Matrice
 {
@@ -12,7 +10,7 @@ public:
     /**
      * @brief Construct a new Matrice object with given size and data.
      * @param size The size of the matrix (size x size).
-     * @param data A 2D array of uint16_t representing the matrix data.
+     * @param data A 2D array of uint8_t representing the matrix data.
      */
     Matrice(int size, uint16_t** data);
 
@@ -48,7 +46,7 @@ private:
     uint16_t size;
 
     /**
-     * @brief A 2D array of uint16_t representing the matrix data.
+     * @brief A 2D array of uint8_t representing the matrix data.
      */
     uint16_t** data;
 };

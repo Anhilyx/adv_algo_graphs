@@ -1,4 +1,6 @@
 #include "matrice.h"
+#include <fstream>
+#include <stdexcept>
 
 Matrice::Matrice(int size, uint16_t** data):
     size(size),
