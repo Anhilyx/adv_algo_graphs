@@ -35,6 +35,20 @@ public:
     operator std::string() const;
 
     /**
+     * @brief Get the size of the matrix (number of rows or columns).
+     * @return The size of the matrix.
+     */
+    uint16_t getSize();
+
+    /**
+     * @brief Get the value at the specified row and column in the matrix.
+     * @param from The row index.
+     * @param to The column index.
+     * @return The value at the specified position in the matrix.
+     */
+    uint16_t getEdge(uint16_t from, uint16_t to) const;
+
+    /**
      * @brief Apply the Floyd-Warshall algorithm to find the shortest paths in the graph represented by the matrix.
      * @return A 2D array representing the shortest path distances between each pair of vertices.
      */

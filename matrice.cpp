@@ -52,6 +52,16 @@ Matrice::operator std::string() const
     return result;
 }
 
+uint16_t Matrice::getSize()
+{
+    return size;
+}
+
+uint16_t Matrice::getEdge(uint16_t from, uint16_t to) const
+{
+    return data[from][to];
+}
+
 Matrice Matrice::floydWarshall()
 {   
     // Create a new matrix to store the path lengths
@@ -86,10 +96,6 @@ Matrice Matrice::floydWarshall()
 
 std::vector<std::vector<uint16_t>> Matrice::kosaraju() const
 {
-    /******************
-    | Normal ordering |
-    ******************/
-
     // Create values for the pre/post ordering calculation
     uint16_t** ordering = new uint16_t*[size];
     bool* visited = new bool[size];
@@ -110,10 +116,6 @@ std::vector<std::vector<uint16_t>> Matrice::kosaraju() const
         // Perform a DFS from that node
         dfs(next, ordering, visited, &preCount, &postCount);
     }
-
-    /********************
-    | Inverted ordering |
-    ********************/
 
     // Reset values for the cluster calculation
     std::vector<std::vector<uint16_t>> clusters;
@@ -146,10 +148,7 @@ std::vector<std::vector<uint16_t>> Matrice::kosaraju() const
         }
     }
 
-    /**********
-    | Cleanup |
-    **********/
-    
+    // Clean up
     for (uint16_t i = 0; i < size; i++) {
         delete[] ordering[i];
     }

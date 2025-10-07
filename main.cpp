@@ -1,4 +1,7 @@
-/* #include "mainwindow.h"
+#include "mainwindow.h"
+
+#include "graph.h"
+#include "matrice.h"
 
 #include <QApplication>
 
@@ -6,11 +9,14 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+    Matrice m = Matrice("../../examples/mat_x20.txt");
+    Graph g = Graph(&m);
+    w.setCentralWidget(&g);
     w.show();
     return a.exec();
-} */
+}
 
-#include "matrice.h"
+/* #include "matrice.h"
 #include <iostream>
 
 int main() {
@@ -36,4 +42,4 @@ int main() {
         return 1;
     }
     return 0;
-}
+} */
