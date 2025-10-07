@@ -60,6 +60,13 @@ public:
      */
     std::vector<std::vector<uint16_t>> kosaraju() const;
 
+    /**
+     * @brief Create a new Matrice representing the clusters of the current Matrice.
+     * Each cluster is represented as a single node, with edges between clusters if there are edges between any nodes in these clusters.
+     * @return A new Matrice representing the clusters.
+     */
+    Matrice clusterMatrice();
+
 private:
     /**
      * @brief The size of the matrix (size x size).

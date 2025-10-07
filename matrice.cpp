@@ -158,6 +158,38 @@ std::vector<std::vector<uint16_t>> Matrice::kosaraju() const
     return clusters;
 }
 
+Matrice Matrice::clusterMatrice()
+{
+    // Get the clusters using Kosaraju's algorithm
+    std::vector<std::vector<uint16_t>> clusters = kosaraju();
+    uint16_t clusterCount = clusters.size();
+
+    // Create a new adjacency matrix for the clusters
+    uint16_t** clusterData = new uint16_t*[clusterCount];
+    for (uint16_t i = 0; i < clusterCount; i++) {
+        clusterData[i] = new uint16_t[clusterCount];
+        for (uint16_t j = 0; j < clusterCount; j++) {
+            clusterData[i][j] = 0; // Initialize with no edges
+        }
+    }
+
+    // Populate the cluster adjacency matrix
+    for (uint16_t i = 0; i < clusterCount; i++) {
+        for (uint16_t j = 0; j < clusterCount; j++) {
+            if (i == j) continue; // No self-loops
+
+            // Check if there is an edge from any node in cluster i to any node in cluster j
+            for (uint16_t nodeFrom : clusters[i]) {
+                for (uint16_t nodeTo : clusters[j]) {
+                    clusterData[i][j] += data[nodeFrom][nodeTo] > 0 ? 1 : 0;
+                }
+            }
+        }
+    }
+
+    return Matrice(clusterCount, clusterData);
+}
+
 void Matrice::dfs(uint16_t id, uint16_t** ordering, bool* visited,
                   uint16_t* preCount, uint16_t* postCount) const
 {
