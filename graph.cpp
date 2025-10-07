@@ -76,10 +76,10 @@ void Graph::paintEvent(QPaintEvent* event)
         painter.setPen(QPen(Qt::black, 2));
         painter.drawEllipse(positions[i], nodeRadius, nodeRadius);
 
-        // Ajouter le numéro du node
+        // Ajouter le nom du node
         painter.setPen(Qt::black);
         painter.drawText(QRectF(positions[i].x() - nodeRadius, positions[i].y() - nodeRadius,
                                 2 * nodeRadius, 2 * nodeRadius),
-                         Qt::AlignCenter, QString::number(i));
+                         Qt::AlignCenter, QString::fromStdString(matrice.getName(i)));
     }
 }

@@ -13,7 +13,7 @@ public:
      * @param size The size of the matrix (size x size).
      * @param data A 2D array of uint8_t representing the matrix data.
      */
-    Matrice(int size, uint16_t** data);
+    Matrice(int size, uint16_t** data, std::string* names = nullptr);
 
     /**
      * @brief Construct a new Matrice object by reading from a file.
@@ -35,6 +35,20 @@ public:
     operator std::string() const;
 
     /**
+     * @brief Convert the matrix to a Markdown table representation.
+     * @param path Optional path to save the Markdown table to a file. If empty, the table is not saved to a file.
+     * @return A string containing the Markdown table representation of the matrix.
+     */
+    std::string toMarkdown(std::string path = "") const;
+
+    /**
+     * @brief Convert the matrix to an HTML table representation.
+     * @param path Optional path to save the HTML table to a file. If empty, the table is not saved to a file.
+     * @return A string containing the HTML table representation of the matrix.
+     */
+    std::string toHtml(std::string path = "") const;
+
+    /**
      * @brief Get the size of the matrix (number of rows or columns).
      * @return The size of the matrix.
      */
@@ -47,6 +61,14 @@ public:
      * @return The value at the specified position in the matrix.
      */
     uint16_t getEdge(uint16_t from, uint16_t to) const;
+
+    /**
+     * @brief Get the name of the node at the specified index.
+     * If names are not set, returns the index+1 as a string.
+     * @param index The index of the node.
+     * @return The name of the node.
+     */
+    std::string getName(uint16_t index) const;
 
     /**
      * @brief Apply the Floyd-Warshall algorithm to find the shortest paths in the graph represented by the matrix.
@@ -77,6 +99,12 @@ private:
      * @brief A 2D array of uint8_t representing the matrix data.
      */
     uint16_t** data;
+
+    /**
+     * @brief An array of strings representing the names of the nodes.
+     * If nullptr, nodes are unnamed and represented by their indexes+1.
+     */
+    std::string* names;
 
     /**
      * @brief Helper function for depth-first search to find connected components.

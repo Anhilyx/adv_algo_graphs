@@ -1,14 +1,16 @@
 #include "matrice.h"
+#include <filesystem>
 #include <fstream>
 #include <stdexcept>
-#include <vector>
 
-Matrice::Matrice(int size, uint16_t** data):
+Matrice::Matrice(int size, uint16_t** data, std::string* names):
     size(size),
-    data(data)
+    data(data),
+    names(names)
 {}
 
-Matrice::Matrice(const std::string& path)
+Matrice::Matrice(const std::string& path):
+    names(nullptr)
 {
     // Open the file
     std::ifstream file(path);
@@ -52,6 +54,119 @@ Matrice::operator std::string() const
     return result;
 }
 
+std::string Matrice::toMarkdown(std::string path) const
+{
+    // Create the header row
+    std::string result = "| |";
+    for (uint16_t j = 0; j < size; ++j) {
+        result += getName(j) + "|";
+    }
+    result += "\n|-|";
+    for (uint16_t j = 0; j < size; ++j) {
+        result += "-|";
+    }
+
+    // Create each row of the table
+    result += "\n";
+    for (uint16_t i = 0; i < size; ++i) {
+        result += "|**" + getName(i) + "**|";
+        for (uint16_t j = 0; j < size; ++j) {
+            result += std::to_string(data[i][j]) + "|";
+        }
+        result += "\n";
+    }
+
+    // Optionally write to a file
+    if (!path.empty()) {
+        // Create the folder structure if it doesn't exist
+        std::string folder = path.substr(0, path.find_last_of('/'));
+        std::filesystem::create_directories(folder);
+
+        // Write the result to the file
+        std::ofstream file(path);
+        if (file) {
+            file << result;
+        } else {
+            throw std::runtime_error("Could not open file for writing");
+        }
+    }
+
+    return result;
+}
+
+std::string Matrice::toHtml(std::string path) const
+{
+    // Create the base of the file
+    std::string result =
+        "<html>" \
+            "<head>" \
+                "<style>" \
+                    "body {" \
+                        "color: #fff;" \
+                        "background-color: #222;" \
+                    "}" \
+                    "tr:first-child > td, td:first-child {" \
+                        "font-weight: bold;" \
+                        "font-size: 1.2rem;" \
+                        "background-color: #0000;" \
+                    "}" \
+                    "td {" \
+                        "width: 40px;" \
+                        "height: 20px;" \
+                        "text-align: center;" \
+                        "background-color: #4F43;" \
+                    "}" \
+                    "td.null {" \
+                        "color: #888;" \
+                        "background-color: #F443;" \
+                    "}" \
+                "</style>" \
+            "</head>" \
+            "<body>" \
+                "<table>" \
+                    "<tbody>";
+
+    // Create the header row
+    result += "<td>";
+    for (uint16_t j = 0; j < size; ++j) {
+        result += "<td>" + getName(j) + "</td>";
+    }
+    result += "</tr>";
+
+    // Create each row of the table
+    for (uint16_t i = 0; i < size; ++i) {
+        result += "<tr><td>" + getName(i) + "</td>";
+        for (uint16_t j = 0; j < size; ++j) {
+            result += std::string("<td") + (data[i][j] == 0 ? " class='null'" : "") + ">" + std::to_string(data[i][j]) + "</td>";
+        }
+        result += "</tr>";
+    }
+
+    // Create the end of the file
+    result +=
+                    "</tbody>" \
+                "</table>" \
+            "</body>" \
+        "</html>";
+
+    // Optionally write to a file
+    if (!path.empty()) {
+        // Create the folder structure if it doesn't exist
+        std::string folder = path.substr(0, path.find_last_of('/'));
+        std::filesystem::create_directories(folder);
+
+        // Write the result to the file
+        std::ofstream file(path);
+        if (file) {
+            file << result;
+        } else {
+            throw std::runtime_error("Could not open file for writing");
+        }
+    }
+
+    return result;
+}
+
 uint16_t Matrice::getSize()
 {
     return size;
@@ -60,6 +175,15 @@ uint16_t Matrice::getSize()
 uint16_t Matrice::getEdge(uint16_t from, uint16_t to) const
 {
     return data[from][to];
+}
+
+std::string Matrice::getName(uint16_t index) const
+{
+    if (names) {
+        return names[index];
+    } else {
+        return std::to_string(index + 1);
+    }
 }
 
 Matrice Matrice::floydWarshall()
@@ -187,7 +311,17 @@ Matrice Matrice::clusterMatrice()
         }
     }
 
-    return Matrice(clusterCount, clusterData);
+    // Generate names for the clusters
+    std::string* clusterNames = new std::string[clusterCount];
+    for (uint16_t i = 0; i < clusterCount; i++) {
+        clusterNames[i] = "{" + std::to_string(clusters[i][0]);
+        for (size_t j = 1; j < clusters[i].size(); j++) {
+            clusterNames[i] += "," + std::to_string(clusters[i][j]);
+        }
+        clusterNames[i] += "}";
+    }
+
+    return Matrice(clusterCount, clusterData, clusterNames);
 }
 
 void Matrice::dfs(uint16_t id, uint16_t** ordering, bool* visited,
