@@ -1,5 +1,5 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+#ifndef GRAPHWIDGET_H
+#define GRAPHWIDGET_H
 
 #include "matrice.h"
 
@@ -10,17 +10,17 @@
 #define NODE_SPACING 100
 
 /**
- * @brief A widget to display a graph
+ * @brief A widget to display a Graph
  */
-class Graph : public QWidget
+class GraphWidget : public QWidget
 {
     Q_OBJECT
 public:
     /**
-     * @brief Construct a new Graph object
+     * @brief Construct a new GraphWidget object
      * @param parent The parent widget
      */
-    explicit Graph(Matrice* data, QWidget *parent = nullptr);
+    explicit GraphWidget(const Matrice* data, QWidget *parent = nullptr);
 
     /**
      * @brief Paint event handler
@@ -29,9 +29,9 @@ public:
     void paintEvent(QPaintEvent* event) override;
 
 private:
-    Matrice matrice;
+    const Matrice* matrice;
 
 signals:
 };
 
-#endif // GRAPH_H
+#endif // GRAPHWIDGET_H

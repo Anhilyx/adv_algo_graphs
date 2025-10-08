@@ -9,15 +9,17 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    graph.cpp \
+    graphwidget.cpp \
     main.cpp \
     mainwindow.cpp \
-    matrice.cpp
+    matrice.cpp \
+    matricewidget.cpp
 
 HEADERS += \
-    graph.h \
+    graphwidget.h \
     mainwindow.h \
-    matrice.h
+    matrice.h \
+    matricewidget.h
 
 FORMS += \
     mainwindow.ui

@@ -1,11 +1,11 @@
-#include "graph.h"
+#include "graphwidget.h"
 
-Graph::Graph(Matrice* data, QWidget *parent):
+GraphWidget::GraphWidget(const Matrice* data, QWidget *parent):
     QWidget{parent},
-    matrice{*data}
+    matrice{data}
 {}
 
-void Graph::paintEvent(QPaintEvent* event)
+void GraphWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -15,7 +15,7 @@ void Graph::paintEvent(QPaintEvent* event)
     int radius = std::min(w, h) / 2 - 50; // rayon pour disposer les nodes
     int nodeRadius = 20;                  // rayon des nodes
 
-    uint16_t n = matrice.getSize();           // nombre de nodes
+    uint16_t n = matrice->getSize();           // nombre de nodes
     std::vector<QPointF> positions(n);
 
     // 1️⃣ Calculer la position de chaque node (layout circulaire)
@@ -26,13 +26,13 @@ void Graph::paintEvent(QPaintEvent* event)
     }
 
     // 2️⃣ Récupérer les composantes fortement connexes
-    auto clusters = matrice.kosaraju();
+    auto clusters = matrice->kosaraju();
 
     // 3️⃣ Dessiner les edges
     painter.setPen(QPen(Qt::white, 2));
     for (uint16_t i = 0; i < n; ++i) {
         for (uint16_t j = 0; j < n; ++j) {
-            if (matrice.getEdge(i, j) != 0) {
+            if (matrice->getEdge(i, j) != 0) {
                 QPointF p1 = positions[i];
                 QPointF p2 = positions[j];
 
@@ -80,6 +80,6 @@ void Graph::paintEvent(QPaintEvent* event)
         painter.setPen(Qt::black);
         painter.drawText(QRectF(positions[i].x() - nodeRadius, positions[i].y() - nodeRadius,
                                 2 * nodeRadius, 2 * nodeRadius),
-                         Qt::AlignCenter, QString::fromStdString(matrice.getName(i)));
+                         Qt::AlignCenter, QString::fromStdString(matrice->getName(i)));
     }
 }

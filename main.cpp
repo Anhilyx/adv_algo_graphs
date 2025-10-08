@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 
-#include "graph.h"
+#include "graphwidget.h"
 #include "matrice.h"
+#include "matricewidget.h"
 #include <iostream>
 
 #include <QApplication>
@@ -12,7 +13,7 @@
 int main(int argc, char *argv[])
 {
     // Tests, with outputs in the console
-    try {
+    /* try {
         // Matrice from file
         Matrice m(MATRICE_PATH);
         std::string s = m;
@@ -47,14 +48,12 @@ int main(int argc, char *argv[])
     } catch (const std::runtime_error& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
-    }
+    } */
 
     // QT Application
     QApplication a(argc, argv);
-    MainWindow w;
-    Matrice m = Matrice(MATRICE_PATH);
-    Graph g = Graph(&m);
-    w.setCentralWidget(&g);
+    Matrice* m = new Matrice(MATRICE_PATH);
+    MainWindow w(m);
     w.show();
     return a.exec();
 }

@@ -167,7 +167,7 @@ std::string Matrice::toHtml(std::string path) const
     return result;
 }
 
-uint16_t Matrice::getSize()
+uint16_t Matrice::getSize() const
 {
     return size;
 }
@@ -186,7 +186,7 @@ std::string Matrice::getName(uint16_t index) const
     }
 }
 
-Matrice Matrice::floydWarshall()
+Matrice* Matrice::floydWarshall() const
 {   
     // Create a new matrix to store the path lengths
     uint16_t** paths = new uint16_t*[size];
@@ -215,7 +215,7 @@ Matrice Matrice::floydWarshall()
         }
     }
 
-    return Matrice(size, paths);
+    return new Matrice(size, paths);
 }
 
 std::vector<std::vector<uint16_t>> Matrice::kosaraju() const
@@ -282,7 +282,7 @@ std::vector<std::vector<uint16_t>> Matrice::kosaraju() const
     return clusters;
 }
 
-Matrice Matrice::clusterMatrice()
+Matrice* Matrice::clusterMatrice() const
 {
     // Get the clusters using Kosaraju's algorithm
     std::vector<std::vector<uint16_t>> clusters = kosaraju();
@@ -321,7 +321,7 @@ Matrice Matrice::clusterMatrice()
         clusterNames[i] += "}";
     }
 
-    return Matrice(clusterCount, clusterData, clusterNames);
+    return new Matrice(clusterCount, clusterData, clusterNames);
 }
 
 void Matrice::dfs(uint16_t id, uint16_t** ordering, bool* visited,

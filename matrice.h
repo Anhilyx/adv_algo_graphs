@@ -52,7 +52,7 @@ public:
      * @brief Get the size of the matrix (number of rows or columns).
      * @return The size of the matrix.
      */
-    uint16_t getSize();
+    uint16_t getSize() const;
 
     /**
      * @brief Get the value at the specified row and column in the matrix.
@@ -74,7 +74,7 @@ public:
      * @brief Apply the Floyd-Warshall algorithm to find the shortest paths in the graph represented by the matrix.
      * @return A 2D array representing the shortest path distances between each pair of vertices.
      */
-    Matrice floydWarshall();
+    Matrice* floydWarshall() const;
 
     /**
      * @brief Compute the clusters in the graph represented by the matrix, using the Kosaraju algorithm.
@@ -87,7 +87,7 @@ public:
      * Each cluster is represented as a single node, with edges between clusters if there are edges between any nodes in these clusters.
      * @return A new Matrice representing the clusters.
      */
-    Matrice clusterMatrice();
+    Matrice* clusterMatrice() const;
 
 private:
     /**

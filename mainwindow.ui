@@ -20,11 +20,97 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFiles">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionImport_matrice"/>
+    <addaction name="actionSave_Graph"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuActions">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionGraph"/>
+    <addaction name="actionClusters"/>
+    <addaction name="separator"/>
+    <addaction name="actionMatrice"/>
+    <addaction name="actionFloyd_Warshall"/>
+    <addaction name="actionCluster_Matrice"/>
+   </widget>
+   <addaction name="menuFiles"/>
+   <addaction name="menuActions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionImport_matrice">
+   <property name="text">
+    <string>Import...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_Graph">
+   <property name="text">
+    <string>Export...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionGraph">
+   <property name="text">
+    <string>Base Graph</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+&amp;</string>
+   </property>
+  </action>
+  <action name="actionClusters">
+   <property name="text">
+    <string>Cluster Graph</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+&quot;</string>
+   </property>
+  </action>
+  <action name="actionMatrice">
+   <property name="text">
+    <string>Base Matrice</string>
+   </property>
+   <property name="shortcut">
+    <string>1</string>
+   </property>
+  </action>
+  <action name="actionFloyd_Warshall">
+   <property name="text">
+    <string>Floyd-Warshall</string>
+   </property>
+   <property name="shortcut">
+    <string>2</string>
+   </property>
+  </action>
+  <action name="actionCluster_Matrice">
+   <property name="text">
+    <string>Cluster Matrice</string>
+   </property>
+   <property name="shortcut">
+    <string>3</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
