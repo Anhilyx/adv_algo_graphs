@@ -1,3 +1,4 @@
 **/*.TMP
 build
 graphs.pro.user.*
+**/__pycache__
