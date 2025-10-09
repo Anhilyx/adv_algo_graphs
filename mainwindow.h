@@ -22,10 +22,9 @@ class MainWindow : public QMainWindow
 public:
     /**
      * @brief Construct a new Main Window object
-     * @param matrice The initial matrix to be displayed
      * @param parent The parent widget
      */
-    MainWindow(Matrice* matrice, QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     
     /**
      * @brief Destroy the Main Window object
@@ -52,6 +51,16 @@ private:
      * @brief Pointer to the widget currently displayed in the central area
      */
     QWidget* displayedWidget;
+
+    /**
+     * @brief Identifier for the current display mode
+     *   1: Basic Graph View
+     *   2: Clusters Graph View
+     * 101: Basic Matrice View
+     * 102: Floyd-Warshall Matrice View
+     * 103: Clusters Matrice View
+     */
+    uint8_t displayId;
 
 private slots:
     /**
