@@ -4,32 +4,39 @@
 #include "graphwidget.h"
 #include "matricewidget.h"
 #include <iostream>
-#include <string>
 
-MainWindow::MainWindow(Matrice* matrice, QWidget *parent)
-    : QMainWindow(parent)
-    , currentMatrice(matrice)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(Matrice* matrice, QWidget* parent):
+    QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    currentMatrice(matrice)
 {
     ui->setupUi(this);
-    GraphWidget* widget = new GraphWidget(currentMatrice, this);
-    setCentralWidget(widget);
+
+    // Create and set the initial central widget to display the graph
+    displayedMatrice = currentMatrice;
+    displayedWidget = new GraphWidget(currentMatrice, this);
+    setCentralWidget(displayedWidget);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    if (displayedMatrice != currentMatrice) {
+        delete displayedMatrice;
+    }
+    delete currentMatrice;
 }
 
-void MainWindow::on_actionImport_matrice_triggered()
+void MainWindow::on_actionImport_triggered()
 {
-
+    // TODO
 }
 
 
-void MainWindow::on_actionSave_Graph_triggered()
+void MainWindow::on_actionExport_triggered()
 {
-
+    // TODO
 }
 
 
@@ -39,41 +46,42 @@ void MainWindow::on_actionExit_triggered()
 }
 
 
-void MainWindow::on_actionGraph_triggered()
+void MainWindow::on_actionBasicGraphView_triggered()
 {
-    GraphWidget* widget = new GraphWidget(currentMatrice, this);
-    setCentralWidget(widget);
+    displayedMatrice = currentMatrice;
+    displayedWidget = new GraphWidget(displayedMatrice, this);
+    setCentralWidget(displayedWidget);
 }
 
 
-void MainWindow::on_actionClusters_triggered()
+void MainWindow::on_actionClustersGraphView_triggered()
 {
-    Matrice* matrice = currentMatrice->clusterMatrice();
-    GraphWidget* widget = new GraphWidget(matrice, this);
-    setCentralWidget(widget);
+    displayedMatrice = currentMatrice->clusterMatrice();
+    displayedWidget = new GraphWidget(displayedMatrice, this);
+    setCentralWidget(displayedWidget);
 }
 
 
-void MainWindow::on_actionMatrice_triggered()
+void MainWindow::on_actionBasicMatriceView_triggered()
 {
-    MatriceWidget* widget = new MatriceWidget(currentMatrice, this);
-    setCentralWidget(widget);
+    displayedMatrice = currentMatrice;
+    displayedWidget = new MatriceWidget(displayedMatrice, this);
+    setCentralWidget(displayedWidget);
 }
 
 
-void MainWindow::on_actionFloyd_Warshall_triggered()
+void MainWindow::on_actionFloydWarshallMatriceView_triggered()
 {
-    Matrice* matrice = currentMatrice->floydWarshall();
-    MatriceWidget* widget = new MatriceWidget(matrice, this);
-    setCentralWidget(widget);
+    displayedMatrice = currentMatrice->floydWarshall();
+    displayedWidget = new MatriceWidget(displayedMatrice, this);
+    setCentralWidget(displayedWidget);
 
 }
 
 
-void MainWindow::on_actionCluster_Matrice_triggered()
+void MainWindow::on_actionClustersMatriceView_triggered()
 {
-    Matrice* matrice = currentMatrice->clusterMatrice();
-    MatriceWidget* widget = new MatriceWidget(matrice, this);
-    setCentralWidget(widget);
+    displayedMatrice = currentMatrice->clusterMatrice();
+    displayedWidget = new MatriceWidget(displayedMatrice, this);
+    setCentralWidget(displayedWidget);
 }
-

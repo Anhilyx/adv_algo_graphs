@@ -3,9 +3,12 @@
 
 #include "matrice.h"
 
-#include <QWidget>
+#include <QMouseEvent>
 #include <QPainter>
+#include <QWidget>
 
+#define ARROW_SIZE 10
+#define EDGE_SIZE 2
 #define NODE_SIZE 40
 #define NODE_SPACING 100
 
@@ -15,23 +18,86 @@
 class GraphWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     /**
      * @brief Construct a new GraphWidget object
+     * @param data The matrice representing the graph
      * @param parent The parent widget
      */
-    explicit GraphWidget(const Matrice* data, QWidget *parent = nullptr);
+    explicit GraphWidget(const Matrice* data, QWidget* parent = nullptr);
 
     /**
+     * @brief Destroy the GraphWidget object
+     */
+    ~GraphWidget() override;
+
+protected:
+    /**
      * @brief Paint event handler
-     * @param event The paint event
+     * @param event The paint event (unused)
      */
     void paintEvent(QPaintEvent* event) override;
 
+    /**
+     * @brief Mouse down event handler, to allow moving nodes
+     * @param event The mouse event
+     */
+    void mousePressEvent(QMouseEvent* event) override;
+    
+    /**
+     * @brief Mouse up event handler, to allow moving nodes
+     * @param event The mouse event (unused)
+     */
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    
+    /**
+     * @brief Mouse move event handler, to allow moving nodes
+     * @param event The mouse event
+     */
+    void mouseMoveEvent(QMouseEvent* event) override;
+
 private:
+    /**
+     * @brief Stores graphical information about a node
+     */
+    struct Node {
+        /**
+         * @brief The position of the node
+         */
+        QPointF position;
+
+        /**
+         * @brief A pointer to the color of the node (usually, multiple nodes will share the same color)
+         */
+        QColor* color;
+    };
+    
+    /**
+     * @brief The matrice representing the graph
+     */
     const Matrice* matrice;
 
-signals:
+
+    /**
+     * @brief The clusters in the matrice (a list of list of node indexes)
+     */
+    std::vector<std::vector<uint32_t>> clusters;
+
+    /**
+     * @brief The data of the nodes
+     */
+    Node* nodes;
+
+    /**
+    * @brief A pointer to the node being moved, or nullptr if no node is being moved
+    */
+   Node* targetNode = nullptr;
+
+    /**
+     * @brief The offset between the mouse position and the center of the node being moved
+     */
+   QPointF offset;
 };
 
 #endif // GRAPHWIDGET_H
