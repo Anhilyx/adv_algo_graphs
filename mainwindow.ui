@@ -37,9 +37,11 @@
      <string>View</string>
     </property>
     <addaction name="actionBasicGraphView"/>
+    <addaction name="actionPrimGraphView"/>
     <addaction name="actionClustersGraphView"/>
     <addaction name="separator"/>
     <addaction name="actionBasicMatriceView"/>
+    <addaction name="actionPrimMatriceView"/>
     <addaction name="actionFloydWarshallMatriceView"/>
     <addaction name="actionClustersMatriceView"/>
    </widget>
@@ -79,12 +81,20 @@
     <string>Ctrl+&amp;</string>
    </property>
   </action>
+  <action name="actionPrimGraphView">
+   <property name="text">
+    <string>Prim Graph</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+É</string>
+   </property>
+  </action>
   <action name="actionClustersGraphView">
    <property name="text">
     <string>Cluster Graph</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+&quot;</string>
+    <string>Ctrl+'</string>
    </property>
   </action>
   <action name="actionBasicMatriceView">
@@ -95,12 +105,20 @@
     <string>1</string>
    </property>
   </action>
+  <action name="actionPrimMatriceView">
+   <property name="text">
+    <string>Prim Matrice</string>
+   </property>
+   <property name="shortcut">
+    <string>2</string>
+   </property>
+  </action>
   <action name="actionFloydWarshallMatriceView">
    <property name="text">
     <string>Floyd-Warshall</string>
    </property>
    <property name="shortcut">
-    <string>2</string>
+    <string>3</string>
    </property>
   </action>
   <action name="actionClustersMatriceView">
@@ -108,7 +126,7 @@
     <string>Cluster Matrice</string>
    </property>
    <property name="shortcut">
-    <string>3</string>
+    <string>4</string>
    </property>
   </action>
  </widget>

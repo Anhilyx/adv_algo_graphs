@@ -38,10 +38,12 @@ void MainWindow::on_actionImport_triggered()
 
     // Update the displayed widget to show the new matrice as a graph
     if      (displayId ==   1) on_actionBasicGraphView_triggered();
-    else if (displayId ==   2) on_actionClustersGraphView_triggered();
+    else if (displayId ==   2) on_actionPrimGraphView_triggered();
+    else if (displayId ==   4) on_actionClustersGraphView_triggered();
     else if (displayId == 101) on_actionBasicMatriceView_triggered();
-    else if (displayId == 102) on_actionFloydWarshallMatriceView_triggered();
-    else if (displayId == 103) on_actionClustersMatriceView_triggered();
+    else if (displayId == 102) on_actionPrimMatriceView_triggered();
+    else if (displayId == 103) on_actionFloydWarshallMatriceView_triggered();
+    else if (displayId == 104) on_actionClustersMatriceView_triggered();
 }
 
 
@@ -82,10 +84,25 @@ void MainWindow::on_actionBasicGraphView_triggered()
 }
 
 
-void MainWindow::on_actionClustersGraphView_triggered()
+void MainWindow::on_actionPrimGraphView_triggered()
 {
     // Set the display ID
     displayId = 2;
+
+    // Ignore the rest of the action if there is no matrice loaded
+    if (currentMatrice == nullptr) return;
+
+    // Set the displayed matrice to the current one and update the widget
+    displayedMatrice = currentMatrice->prim();
+    displayedWidget = new GraphWidget(displayedMatrice, this);
+    setCentralWidget(displayedWidget);
+}
+
+
+void MainWindow::on_actionClustersGraphView_triggered()
+{
+    // Set the display ID
+    displayId = 4;
 
     // Ignore the rest of the action if there is no matrice loaded
     if (currentMatrice == nullptr) return;
@@ -112,10 +129,25 @@ void MainWindow::on_actionBasicMatriceView_triggered()
 }
 
 
-void MainWindow::on_actionFloydWarshallMatriceView_triggered()
+void MainWindow::on_actionPrimMatriceView_triggered()
 {
     // Set the display ID
     displayId = 102;
+
+    // Ignore the rest of the action if there is no matrice loaded
+    if (currentMatrice == nullptr) return;
+
+    // Set the displayed matrice to the current one and update the widget
+    displayedMatrice = currentMatrice->prim();
+    displayedWidget = new MatriceWidget(displayedMatrice, this);
+    setCentralWidget(displayedWidget);
+}
+
+
+void MainWindow::on_actionFloydWarshallMatriceView_triggered()
+{
+    // Set the display ID
+    displayId = 103;
 
     // Ignore the rest of the action if there is no matrice loaded
     if (currentMatrice == nullptr) return;
@@ -130,7 +162,7 @@ void MainWindow::on_actionFloydWarshallMatriceView_triggered()
 void MainWindow::on_actionClustersMatriceView_triggered()
 {
     // Set the display ID
-    displayId = 103;
+    displayId = 104;
 
     // Ignore the rest of the action if there is no matrice loaded
     if (currentMatrice == nullptr) return;

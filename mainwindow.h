@@ -55,10 +55,12 @@ private:
     /**
      * @brief Identifier for the current display mode
      *   1: Basic Graph View
-     *   2: Clusters Graph View
+     *   2: Prim Graph View
+     *   4: Clusters Graph View
      * 101: Basic Matrice View
-     * 102: Floyd-Warshall Matrice View
-     * 103: Clusters Matrice View
+     * 102: Prim Matrice View
+     * 103: Floyd-Warshall Matrice View
+     * 104: Clusters Matrice View
      */
     uint8_t displayId;
 
@@ -84,6 +86,11 @@ private slots:
     void on_actionBasicGraphView_triggered();
 
     /**
+     * @brief Slot for the "Prim Graph" view
+     */
+    void on_actionPrimGraphView_triggered();
+
+    /**
      * @brief Slot for the "Clusters Graph" view
      */
     void on_actionClustersGraphView_triggered();
@@ -92,6 +99,11 @@ private slots:
      * @brief Slot for the "Basic Matrice" view
      */
     void on_actionBasicMatriceView_triggered();
+
+    /**
+     * @brief Slot for the "Prim Matrice" view
+     */
+    void on_actionPrimMatriceView_triggered();
 
     /**
      * @brief Slot for the "Floyd-Warshall Matrice" view

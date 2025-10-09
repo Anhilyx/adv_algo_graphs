@@ -93,6 +93,12 @@ public:
     Matrice* floydWarshall() const;
 
     /**
+     * @brief Apply Prim's algorithm to find the Minimum Spanning Tree (MST) of the graph represented by the matrix.
+     * @return A new Matrice representing the MST.
+     */
+    Matrice* prim() const;
+
+    /**
      * @brief Compute the clusters in the graph represented by the matrix, using the Kosaraju algorithm.
      * @return A vector of clusters, where each cluster is represented by a vector of node indexes.
      */

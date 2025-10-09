@@ -113,6 +113,39 @@ void GraphWidget::paintEvent(QPaintEvent* event)
             painter.setBrush(Qt::white);
             painter.drawPolygon(arrowHead);
             painter.setBrush(Qt::NoBrush);
+
+            // Draw the edge weight near the middle of the edge, offset perpendicularly
+            {
+                QString weight = QString::number(matrice->getEdge(i, j));
+                // Use a smaller font for edge weights
+                QFont f = painter.font();
+                f.setPointSizeF(f.pointSizeF() - 2.0);
+                painter.setFont(f);
+
+                // Retrieve the middle of the line
+                QPointF mid = line.pointAt(0.5);
+
+                // Compute the perpendicular vector to the line
+                double lx = line.dx();
+                double ly = line.dy();
+                double llen = std::hypot(lx, ly);
+                QPointF perp(0, 0);
+                if (llen != 0) {
+                    perp = QPointF(-ly / llen, lx / llen);
+                }
+
+                // Offset the label a little so it does not overlap the edge
+                const double TEXT_OFFSET = 10.0;
+                QPointF textPos = mid + perp * TEXT_OFFSET;
+
+                // Draw text centered on that position
+                QRectF textRect(textPos.x() - 20.0, textPos.y() - 10.0, 40.0, 20.0);
+                painter.drawText(textRect, Qt::AlignCenter, weight);
+
+                // Restore the base font
+                f.setPointSizeF(f.pointSizeF() + 2.0);
+                painter.setFont(f);
+            }
         }
     }
 

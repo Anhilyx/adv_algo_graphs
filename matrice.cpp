@@ -144,6 +144,58 @@ Matrice* Matrice::floydWarshall() const
     return new Matrice(size, paths);  // Uses the private constructor (faster)
 }
 
+Matrice* Matrice::prim() const
+{
+    // Create a new matrix to store the MST
+    int64_t** mstData = new int64_t*[size];
+    for (uint32_t i = 0; i < size; i++) {
+        mstData[i] = new int64_t[size];
+        for (uint32_t j = 0; j < size; j++) {
+            mstData[i][j] = 0;  // Initialize empty
+        }
+    }
+
+    // Array to track included vertices in MST
+    bool* inMST = new bool[size];
+    for (uint32_t i = 0; i < size; i++) {
+        inMST[i] = false;
+    }
+
+    // Start from the first vertex
+    inMST[0] = true;
+
+    for (uint32_t i = 1; i < size; i++) { // Start at 1 since the first vertex is already included
+        int64_t minEdge = INT64_MAX;
+        uint32_t from = UINT32_MAX;
+        uint32_t to = UINT32_MAX;
+
+        // Find the minimum edge connecting a vertex in MST to a vertex outside MST
+        for (uint32_t i = 0; i < size; i++) {
+            if (inMST[i]) {
+                for (uint32_t j = 0; j < size; j++) {
+                    if (!inMST[j] && data[i][j] != 0 && data[i][j] < minEdge) {
+                        minEdge = data[i][j];
+                        from = i;
+                        to = j;
+                    }
+                }
+            }
+        }
+
+        // Check that a valid edge was found (if not, the graph is not fully connected)
+        if (from == UINT32_MAX || to == UINT32_MAX) break;
+
+        // Add the found edge to the MST
+        mstData[from][to] = minEdge;
+        mstData[to][from] = minEdge;  // Add also the reverse edge, as it's an undirected graph
+        inMST[to] = true;
+    }
+
+    delete[] inMST;
+
+    return new Matrice(size, mstData);  // Uses the private constructor (faster)
+}
+
 std::vector<std::vector<uint32_t>> Matrice::kosaraju() const
 {
     // Initialize all necessary variables
