@@ -72,12 +72,16 @@ private:
          */
         QColor* color;
     };
+
+    /**
+     * @brief Compute the positions and colors of the nodes
+     */
+    void computeNodes();
     
     /**
      * @brief The matrice representing the graph
      */
     const Matrice* matrice;
-
 
     /**
      * @brief The clusters in the matrice (a list of list of node indexes)
@@ -98,6 +102,26 @@ private:
      * @brief The offset between the mouse position and the center of the node being moved
      */
    QPointF offset;
+
+    /**
+     * @brief The zoom level of the graph
+     */
+   float zoom = 1.0f;
+
+    /**
+     * @brief The offset of the graph (to allow moving the entire graph)
+     */
+   QPointF graphOffset = QPointF(0, 0);
+
+    /**
+     * @brief A pointer to the starting offset of the graph when moving it, or nullptr if the graph is not being moved
+     */
+   QPointF* graphOffsetStart = nullptr;
+
+    /**
+     * @brief The starting position of the mouse when moving the graph
+     */
+   QPointF mousePosStart;
 };
 
 #endif // GRAPHWIDGET_H
