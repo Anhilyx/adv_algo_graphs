@@ -183,6 +183,9 @@ void GraphWidget::paintEvent(QPaintEvent* event)
 
 void GraphWidget::mousePressEvent(QMouseEvent* event)
 {
+    // Set the cursor to a closed hand
+    setCursor(Qt::ClosedHandCursor);
+
     // Retrieve the adjusted position of the mouse
     int centerX = width() / 2;
     int centerY = height() / 2;
@@ -218,6 +221,9 @@ void GraphWidget::mouseReleaseEvent(QMouseEvent* event)
         delete graphOffsetStart;
         graphOffsetStart = nullptr;
     }
+
+    // Reset the cursor
+    setCursor(Qt::ArrowCursor);
 }
 
 void GraphWidget::mouseMoveEvent(QMouseEvent* event)
