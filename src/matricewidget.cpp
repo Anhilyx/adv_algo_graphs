@@ -35,16 +35,16 @@ MatriceWidget::MatriceWidget(const Matrice* data, QWidget *parent):
     for (uint32_t i = 0; i < size; i++) {
         for (uint32_t j = 0; j < size; j++) {
             int64_t value = matrice->getEdge(i, j);
-            auto* item = new QTableWidgetItem(value == INT64_MAX
-                ? "-"
-                : QString::number(value)
-            );
+            QTableWidgetItem* item;
 
-            // Set background color according to value
-            if (value == 0 || value == INT64_MAX)
+            // Set value and background color according to value
+            if (value == 0 || value == INT64_MAX) {
+                item = new QTableWidgetItem("-");
                 item->setBackground(QBrush(*colorRed));
-            else
+            } else {
+                item = new QTableWidgetItem(QString::number(value));
                 item->setBackground(QBrush(*colorGreen));
+            }
 
             // Add item to table and center text
             item->setTextAlignment(Qt::AlignCenter);
