@@ -1,145 +1,212 @@
-# Visualiseur de Graphes et Matrices (Qt/C++)
+# TP Routing Algorithms
 
-Application de bureau Qt permettant d’importer une matrice d’adjacence, de la visualiser sous forme de graphe ou de tableau, et de lancer quelques algorithmes classiques (Prim, Floyd–Warshall, Kosaraju) ainsi que la construction d’une « matrice de clusters ».
+The goal of this project was to implement different graph algorithms, with graphs represented as adjacency matrices. The project should be done in C++, and must include :
+- A way to import an adjacency matrix from a `.txt` file ;
+- An algorithm to find the shortest path between all pairs of nodes in a graph ;
+- An algorithm to find the minimum spanning tree of a graph ;
+- An algorithm to find the strongly connected components of a directed graph ;
+- An algorithm to create the SCC graph from the original graph ;
 
-Cette application a été réalisée dans le cadre d’un projet universitaire (UE « Algorithmique avancée ») en 2025-2026, avec 4 objectifs :
-- Lecture d'une matrice d'adjacence depuis un fichier texte ;
-- Recherche du cheminent le plus court entre deux sommets ;
-- Construction d'un arbre couvrant minimum ;
-- Identification des composantes fortement connexes ;
-- Création du graphe des clusters.
+My choice was to make this as a Qt application. Aside from the required functionalities, it also includes:
+- A way to visualize graphs and matrices ;
+- A way to export graphs as images.
+- A GUI to interact with the application.
 
-## Fonctionnalités
+## Summary of the project
 
-- Import d’une matrice depuis un fichier texte (.txt) ;
-- Visualisation graphique interactive des sommets et arêtes :
-	- Sommets déplaçables à la souris (drag & drop) ;
-	- Coloration par composantes fortement connexes (Kosaraju) ;
-	- Affichage des noms (ou de l’indice + 1) ;
-- Visualisation tabulaire (QTableWidget) de la matrice ;
-- Algorithmes intégrés :
-	- Prim (arbre couvrant minimum) sur graphe non orienté pondéré ;
-	- Floyd–Warshall (plus courts chemins pour tous les couples) ;
-	- Kosaraju (composantes fortement connexes) ;
-	- Construction d’une matrice de clusters (agrégation des CFC) ;
-- Export de la vue courante (graphique ou matrice) en image.
+### Implemented algorithms
 
-## Formats d’entrée
+Before diving into how to use the application, here is an overview of the implemented algorithms.
 
-Le format attendu par `Matrice(const std::string& path)` est:
+Each algorithm can be found in the `src/matrice.h` and `src/matrice.cpp` files.
 
-1. Première ligne: la taille N de la matrice (nombre de sommets) ;
-2. N lignes suivantes: N entiers par ligne, séparés par des espaces.
+#### <u>Floyd-Warshall algorithm (All-Pairs Shortest Paths)</u>
 
-Exemple minimal (N = 3):
+This algorithm finds the shortest paths between all pairs of nodes in a graph, allowing to easily retrieve the shortest path between any two nodes.
 
+The general idea of the algorithm is:
+1. Create a distance matrix initialized to the weights of the edges, or `infinity` if there is no edge ;
+2. For each node `k`, do:
+    - For each pair of nodes `(i, j)`:
+        - If `i == k` or `j == k`, skip to the next pair ;
+        - Else update the shortest path from `i` to `j` if the path through `k` is shorter\*.
+
+> \* The idea behind this algorithm is that going from `i` to `j` directly is longer than doing `i >> k >> j`.
+
+> If the graph contains negative weight cycles, the behavior is undefined, as the algorithm does not handle them.
+
+It's important to note that the length between `i` to `j` can pass through multiple nodes. For example, the value at `(i; j)` can be the one for the path `i >> k >> j`, meaning that, for subsequent iterations, if the shortest path requires to go from `i` to `j`, it will also pass through `k`, even if not explicitly stated in the matrix.
+
+#### <u>Prim's algorithm (Minimum Spanning Tree)</u>
+
+This algorithm finds the minimum spanning tree (MST), or, in other terms, the subset of edges that connects all vertices in the graph with the minimum possible total edge weight.
+
+The general idea of the algorithm is:
+1. Starting with the first node, do `n-1`\* times:
+    - Find the edge with the smallest weight that connects a node in the MST to a node outside the MST ;
+    - Add this node to the MST and define its parent based on the edge ;
+    - Update the other nodes' distances to the MST if needed.
+2. Create the MST matrix based on the parent array.
+
+> \* `n-1` because a spanning tree with `n` nodes will have `n-1` edges.
+
+The idea behind this algorithm is:
+- Always expand the MST with the smallest possible edge, to only add the minimum number of edges and with the smallest weights ;
+- When adding a new node, update the distances and parents of the other nodes of the MST (if they're connected to the new node), to ensure the minimum spanning tree property is maintained.
+
+#### <u>Kosaraju's algorithm (Strongly Connected Components)</u>
+
+This algorithm finds the strongly connected components (SCC) of a directed graph, which are maximal subgraphs where every vertex is reachable from every other vertex in the subgraph.
+
+The general idea of the algorithm is:
+1. Perform a depth-first search (DFS) on the original graph, keeping track of the order in which nodes finish (post-order) ;
+2. Reverse the direction of all edges in the graph ;
+3. Perform a DFS on the reversed graph, using the highest post-order to determine the order of exploration. Each time the DFS finishes, it identifies a strongly connected component.
+
+The way this algorithm works is by, first, searching nodes that connect to as many nodes as possible (and giving them a high post-order value), and then, in the reversed graph, starting from these nodes, which will now be connected to as little nodes as possible, giving strongly connected components.
+
+#### <u>SCC graph creation</u>
+
+This algorithm was hand-crafted to create the SCC graph from the original graph and its SCCs. However, it's higlhly likely that a similar and possibly more optimized algorithm already exists.
+
+The general idea of the algorithm is:
+1. Retrieve the SCCs of the original graph with Kosaraju's algorithm ;
+2. Create a new graph where each SCC is represented as a single node ;
+3. For each pair `(i, j)` (with `i != j`) in the new graph:
+    - For each node `u` in the SCC represented by `i`:
+        - For each node `v` in the SCC represented by `j`:
+            - If there is an edge from `u` to `v` in the original graph, add an edge from `i` to `j` in the new graph.
+
+> This algorithm includes 4 nested loops, but still have a complexity of `O(n^2)`, as the innermost loops will, in total, only iterate over the edges of the original graph.
+
+---
+
+### Importing a graph
+
+To import a graph, go to `File > Import...` (or use the `Ctrl + O` shortcut) and select a `.txt`.
+
+![How to import a graph (step 1)](./docs/file_menu.png)
+![How to import a graph (step 2)](./docs/import.png)
+
+Graphs are imported from a `.txt` file, with the following format:
 ```
-3
-0 1 0
-1 0 5
-0 0 0
-```
-
-Conventions dans ce projet:
-
-- 0 signifie « pas d’arête » entre i → j ;
-- Valeur != 0: poids de l’arête (graphes orientés possibles: `data[i][j]` peut différer de `data[j][i]`) ;
-- En interne, certains algos utilisent `INT64_MIN` pour « infini/aucun chemin »; ce n’est pas un format de fichier, juste un sentinelle interne. De plus, les fichiers attendent des données en `int32_t` ;
-    - À noter que le fait d'utiliser de telles valeurs peut poser problème dans des cas extrêmes.
-
-Des générateurs Python sont fournis dans `examples/` pour créer rapidement des matrices réalistes ou pondérées (voir plus bas).
-
-## Vues disponibles (Menu > View)
-
-- Base Graph: graphe tel que défini par la matrice ;
-- Prim Graph: arbre couvrant minimum (interprète la matrice comme non orientée et ignore les zéros) ;
-- Cluster Graph: graphe coloré par CFC (Kosaraju) ;
-- Base Matrice: matrice telle quelle ;
-- Prim Matrice: matrice de l’ACM renvoyée par Prim ;
-- Floyd–Warshall: matrice des plus courts chemins (somme des poids) ; absence de chemin marquée par fond rouge et « - » ;
-- Cluster Matrice: matrice d’adjacence entre clusters (CFC).
-
-### Raccourcis depuis `mainwindow.ui`:
-
-- Import…: `Ctrl+O` ;
-- Export…: `Ctrl+S` ;
-- Exit: `Ctrl+Q` ;
-
-Pour changer de vue:
-
-|           |  Base  |  Prim  |Floyd-Warshall|Kosaraju|
-|-----------|--------|--------|--------------|--------|
-|**Graph**  |`Ctrl+&`|`Ctrl+É`|   `Ctrl+"`   |`Ctrl+'`|
-|**Matrice**|`Maj+&` |`Maj+É` |   `Maj+"`    |`Maj+'` |
-
-## Utilisation
-
-1. Lancer l’application ;
-2. File > Import… et choisir un fichier `.txt` au format décrit ci-dessus ;
-3. Choisir la vue dans View > … ;
-4. (Vue Graph) Déplacer un sommet: clic-gauche maintenu puis glisser ;
-5. Exporter une image: File > Export… (PNG/JPG/BMP).
-
-## Construction et exécution
-
-Pré-requis:
-
-- Qt 6.x (Widgets), environnement MinGW ou MSVC sous Windows (testé avec Qt 6.9.3 MinGW 64-bit) ;
-- Un outil de build compatible qmake ou CMake selon votre configuration (ce dépôt fournit `graphs.pro` pour qmake).
-
-Méthodes recommandées:
-
-- Qt Creator: ouvrir `graphs.pro`, choisir le kit, puis Build/Run ;
-- Ligne de commande (exemple MinGW): générer avec qmake puis compiler. L’exécutable résultant (p. ex. `graphs.exe`) se trouvera dans un dossier `build/` de votre configuration.
-
-Note: Un binaire peut déjà exister sous `build/…/debug/graphs.exe` selon votre environnement local. Si absent, compilez depuis les sources comme ci‑dessus.
-
-## Génération d’exemples (Python)
-
-Des scripts dans `examples/` aident à générer des matrices:
-
-- `create_matrice.py`: génère une matrice binaire (0/1) avec « clusters » internes (pour un rendu plus intéressant) et quelques arêtes aléatoires externes ;
-- `create_with_weights.py`: ajoute des poids aléatoires sur les arêtes d’une matrice existante ;
-- `create_install_costs.py`: génère une matrice symétrique de « coûts d’installation » aléatoires, avec `[i][j] = [j][i]`.
-
-Exemples (Windows PowerShell):
-
-```powershell
-# Créer une matrice binaire et l’écrire dans examples/size_50/matrice.txt
-python .\examples\create_matrice.py
-
-# Charger la matrice binaire, lui ajouter des poids et sauvegarder dans examples/size_50/with_weights.txt
-python .\examples\create_with_weights.py
-
-# Générer une matrice symétrique de coûts d’installation (dimension configurable dans le script)
-python .\examples\create_install_costs.py
+<number_of_nodes>
+<edge 0 => 1> <edge 0 => 2> ... <edge 0 => n>
+<edge 1 => 0> <edge 1 => 2> ... <edge 1 => n>
+...
+<edge n => 0> <edge n => 1> ... <edge n => n>
 ```
 
-Les fichiers produits suivent le format d’entrée décrit plus haut et peuvent être importés via File > Import…
+Example: 
+```
+4
+0 1 1 1
+1 0 0 0
+1 0 1 0
+0 1 0 0
+```
 
-## Aperçu de l’architecture
+> The imported graph's size can be up to `UINT32_MAX` (about 4 billion nodes), with values ranging from `INT32_MIN` to `INT32_MAX` (about -2 billion to +2 billion). However, if using exactly the maximum number of nodes or the maximum size, the behavior is undefined, as these values were used for specific cases (ex. `undefined` or `infinity`).
 
-- `matrice.h/.cpp`: structure de données matricielle + algorithmes (Prim, Floyd–Warshall, Kosaraju, clusterMatrice) ;
-- `graphwidget.h/.cpp`: rendu du graphe (Qt Widgets). Calcul de placement par « clusters » sur un cercle et disposition interne; couleurs par CFC; interaction souris ;
-- `matricewidget.h/.cpp`: rendu tabulaire avec coloration (rouge = 0/infini, vert = valeur > 0) ;
-- `mainwindow.h/.cpp/.ui`: shell de l’application, menus, actions, chargement/export et sélection des vues ;
-- `examples/`: générateurs Python et échantillons.
+After importing a graph, you won't see any graph or matrix yet. For this, you need to select a view.
 
-Notes d’implémentation:
+---
 
-- Valeur 0 = absence d’arête. Certaines opérations (Prim/Floyd–Warshall) ignorent ces entrées ;
-- Prim suppose un graphe non orienté: l’arête choisie i–j est recopiée symétriquement `mst[i][j] = mst[j][i]` ;
-- Kosaraju calcule les CFC sur le graphe orienté tel quel (0 = pas d’arête, >0 = arc) ;
-- `clusterMatrice()` agrège les nœuds par CFC et compte les arcs inter‑clusters (`>0`) pour remplir la matrice de sortie.
+### Available views (Menu > View)
 
-## Dépannage
+There is a total of 7 views available under the `View` menu:
+- Base Graph: the graph as defined by the matrix ;
+- Prim Graph: minimum spanning tree (interprets the matrix as undirected and ignores zeros) ;
+- Cluster Graph: graph colored by SCC (Kosaraju) ;
+- Base Matrix: matrix as is ;
+- Prim Matrix: matrix of the MST returned by Prim ;
+- Floyd–Warshall: matrix of shortest paths (sum of weights) ; absence of path marked by red background and « - » ;
+- Cluster Matrix: matrix of adjacency between clusters (SCC).
 
-- Import impossible: vérifier que la première ligne contient bien N et que chaque ligne compte N entiers ;
-- Graphes « disjoints » en vue Prim: l’ACM ne couvre que la composante contenant le premier sommet si le graphe n’est pas connexe ;
-- Floyd–Warshall: un « - » en cellule signifie « pas de chemin » (infini); en interne on utilise `INT64_MIN` comme sentinelle, ce qui peut poser problème dans des cas extrêmes.
+![How to display a graph/matrice (step 1)](./docs/view_menu1.png)
+![How to display a graph/matrice (step 2)](./docs/view_menu2.png)
 
-## Licence
+These views can also be accessed through some shortcuts:
+|          |  Base  |  Prim  |Floyd-Warshall|Kosaraju|
+|----------|--------|--------|--------------|--------|
+|**Graph** |`Ctrl+&`|`Ctrl+É`|              |`Ctrl+'`|
+|**Matrix**|`Maj+&` |`Maj+É` |   `Maj+"`    |`Maj+'` |
 
-Ce programme peut être librement utilisé et modifié.
+> `Ctrl` for graph views, `Shift` for matrix views.<br />
+> `&` or `1`for base, `É` or `2`for MST, `"` or `3` for clusters, `'` or `4` for cluster matrix.
 
-La seule exception concerne l'utilisation de ce projet dans le but de réaliser un projet universitaire ou scolaire similaire, dans quel cas il est demandé d'utiliser uniquement les parties n'étant pas demandées dans ledit projet (par exemple l'interface graphique ou les générateurs d'exemples).
+#### Graph views
+
+Graph views display the graph visually, with named nodes and weighted edges:
+
+![Graph view example](./docs/graph_view.png)
+
+Nodes can be moved by clicking and dragging them with the left mouse button. It's also possible to move the entire view by clicking and dragging outside of any node.
+
+It's also possible to zoom in and out using the slider at the top right of the window.
+
+> For larger graphs, it's mandatory to zoom out or to move the graph, as some nodes will be outside of the view initially.
+
+#### Matrix views
+
+Matrix views display the adjacency matrix of the graph, with rows and columns named after the nodes:
+
+![Matrix view example](./docs/matrix_view.png)
+
+Columns and rows headers contain the name of the nodes (or it's index if unnamed).
+
+The cells contain the weights of the edges, or `-` if there is no edge (weight of `0` or `infinity`). Also, cells with a weight of `0` (or `infinity`) are highlighted in red, to easily identify the absence of edges, while those with values are green.
+
+> As for graph views, for larger graphs, it's mandatory to use the scrollbars to see the entire matrix, even if the '*large*' treshold is higher than for graph views.
+
+---
+
+### Exporting a graph
+
+It's possible to export the currently displayed graph or matrix as an image. To do so, go to `File > Export...` (or use the `Ctrl + E` shortcut) and choose a name for the file.
+
+![How to export a graph (step 1)](./docs/file_menu2.png)
+![How to export a graph (step 2)](./docs/export.png)
+
+---
+
+### Additional features
+
+#### Example files
+
+The `examples/` folder contains some example `.txt` files that can be used to test the application.
+
+The included sizes are `3`, `4`, `6`, `8`, `10`, `12`, `15`, `20`, `30` and `50` nodes. Each of these sizes is contained in its own folder, named `size_<number_of_nodes>`.
+
+Each size includes an unweighted graph (edges with weight `1` or `0`) (`matrice.txt`), a weighted graph (same graph, but with edges having random weights between `1` and `10`) (`with_weights.txt`), and a complete undirected graph (all nodes connected to each other, with random positive weights) (`install_costs.txt`).
+
+#### Generating random graphs
+
+Examples graphs were, for most of them, generated using three python scripts, located in `examples/<script_name>.py`:
+- `create_matrice.py`: generates a random unweighted graph. For a better graph, there is two steps: first, it creates a decent random number of edges between nodes in subgraphs, and then add a few other edges between any nodes, to connect some subgraphs between them ;
+- `create_with_weights.py`: takes an unweighted graph as input, and generates a weighted graph by replacing edges with random weights between `1` and `10` ;
+- `create_install_costs.py`: generates a complete undirected graph with random positive weights between `1` and `n`.
+
+## Questions
+
+### 1. Which algorithm should be used to find the shortest path between all pairs of nodes in a graph?
+
+To find the shortest path between all pairs of nodes in a graph, the Floyd-Warshall algorithm is the best choice. This algorithm can, with a complexity of `O(n^3)`,  find the shortest paths between all pairs of nodes in a graph. As a bonus, it also works with graphs that have negative weights (as long as there are no negative cycles, in which case the result will be incorrect, but the algorithm will not crash).
+
+> Compared to this one, *Dijkstra*'s is more suited for finding the shortest path from a single source node to all other nodes in a graph with non-negative weights, while *Bellman-Ford* is also used for single-source shortest paths but can handle graphs with negative weights, at the cost of increased complexity.
+
+### 2. Which algorithm should be used to find the minimum spanning tree of a graph (in the case of a complete graph)?
+
+For finding the minimum spanning tree (MST) of a complete graph, *Prim*'s algorithm the best choice. It's the most efficient for dense graphs (which complete graphs are the best example), with a time complexity of `O(n^2)`.
+
+> *Kruskal*'s algorithm was another option, but is generally more efficient for sparse graphs, but less so for dense graphs, and even less so for complete graphs.
+
+### 3. Which algorithm should be used to find the strongly connected components of a directed graph?
+
+To find the strongly connected components (SCCs) of a directed graph, *Kosaraju*'s algorithm is a good choice, with a complexity of `O(n^2)`.
+
+> *Tarjan*'s algorithm is another option, with a similar complexity, even if a bit faster in practice, but is more complex to implement.
+
+### Notes
+
+- For these responses, time complexity was computed with the idea that a complexity of `O(e)` (with `e` the number of edges) is equivalent to `O(n^2)` in a complete graph, since `e = (n-1)^2` in this case.
