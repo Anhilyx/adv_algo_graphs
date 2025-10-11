@@ -6,6 +6,7 @@
 
 #define TITLE_FONT_SIZE 32
 #define SUBTITLE_FONT_SIZE 16
+#define COLOR QColor(192, 32, 32)
 
 /**
  * @brief A widget to display when there is an error in the graph.

@@ -12,7 +12,7 @@ void ErrorWidget::paintEvent(QPaintEvent* event)
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(QColor(192, 32, 32));
+    painter.setPen(COLOR);
 
     // Draw "Invalid Graph" in the center of the widget
     QFont font = painter.font();
