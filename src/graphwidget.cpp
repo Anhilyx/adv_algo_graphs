@@ -65,6 +65,11 @@ GraphWidget::~GraphWidget()
     } */
 }
 
+void GraphWidget::forScreenshot(bool screenshot)
+{
+    zoomSlider->setVisible(!screenshot);
+}
+
 void GraphWidget::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);

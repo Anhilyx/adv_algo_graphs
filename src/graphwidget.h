@@ -38,6 +38,12 @@ public:
      */
     ~GraphWidget() override;
 
+    /**
+     * @brief Set whether the widget is being used for a screenshot (disables the zoom slider)
+     * @param screenshot Whether the widget is being used for a screenshot
+     */
+    void forScreenshot(bool screenshot);
+
 protected:
     /**
      * @brief Paint event handler

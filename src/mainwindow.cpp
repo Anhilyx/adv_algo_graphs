@@ -66,6 +66,10 @@ void MainWindow::on_actionExport_triggered()
     // Ignore the action if there is no matrice loaded
     if (currentMatrice == nullptr) return;
 
+    // Prepare the widget for screenshot
+    if (displayId >= 1 && displayId <= 99)  // Graph view
+        static_cast<GraphWidget*>(displayedWidget)->forScreenshot(true);
+
     // Prompt the user to select a file
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image"), "", tr("PNG Image (*.png);;JPEG Image (*.jpg);;BMP Image (*.bmp);;All Files (*)"));
     if (fileName.isEmpty()) {
@@ -74,6 +78,10 @@ void MainWindow::on_actionExport_triggered()
 
     // Save the current displayed widget as an image
     displayedWidget->grab().save(fileName);
+
+    // Restore the widget after screenshot
+    if (displayId >= 1 && displayId <= 99)  // Graph view
+        static_cast<GraphWidget*>(displayedWidget)->forScreenshot(false);
 }
 
 
