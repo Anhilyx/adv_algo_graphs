@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget* parent):
     currentMatrice(nullptr)
 {
     ui->setupUi(this);
+    setWindowTitle("Routing Algorithms - Visualizer");
+    setWindowIcon(QIcon(":/icons/app_icon.png"));
 }
 
 MainWindow::~MainWindow()

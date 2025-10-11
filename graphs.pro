@@ -24,7 +24,10 @@ HEADERS += \
     src/matricewidget.h
 
 FORMS += \
-    src/mainwindow.ui
+    ui/mainwindow.ui
+
+RESOURCES += \
+    resources/resources.qrc
 
 DISTFILES += \
     examples/*
