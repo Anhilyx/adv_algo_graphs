@@ -1,8 +1,9 @@
 #include "errorwidget.h"
 
-ErrorWidget::ErrorWidget(const QString& message, QWidget* parent):
+ErrorWidget::ErrorWidget(const QString& message, const QString& title, QWidget* parent):
     QWidget{parent},
-    errorMessage{message}
+    errorMessage{message},
+    errorTitle{title}
 {}
 
 void ErrorWidget::paintEvent(QPaintEvent* event)
@@ -18,7 +19,7 @@ void ErrorWidget::paintEvent(QPaintEvent* event)
     font.setPointSize(TITLE_FONT_SIZE);
     painter.setFont(font);
     QRect rect = this->rect();
-    painter.drawText(rect, Qt::AlignCenter, "Invalid Graph");
+    painter.drawText(rect, Qt::AlignCenter, errorTitle);
 
     // Draw the error message in smaller font below the title
     font.setPointSize(SUBTITLE_FONT_SIZE);

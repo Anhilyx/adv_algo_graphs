@@ -18,9 +18,10 @@ public:
     /**
      * @brief Constructs an ErrorWidget with the given error message.
      * @param message The error message to display.
+     * @param title The title of the error message (default is "Error").
      * @param parent The parent widget (default is nullptr).
      */
-    ErrorWidget(const QString& message, QWidget* parent = nullptr);
+    ErrorWidget(const QString& message, const QString& title = "Error", QWidget* parent = nullptr);
 
 protected:
     /**
@@ -34,6 +35,11 @@ private:
      * @brief The error message to display.
      */
     QString errorMessage;
+
+    /**
+     * @brief The title of the error message.
+     */
+    QString errorTitle;
 };
 
 #endif // ERRORWIDGET_H

@@ -13,8 +13,14 @@ MainWindow::MainWindow(QWidget* parent):
     currentMatrice(nullptr)
 {
     ui->setupUi(this);
+
+    // Set window title and icon
     setWindowTitle("Routing Algorithms - Visualizer");
     setWindowIcon(QIcon(":/icons/app_icon.png"));
+
+    // Set placeholder widget
+    displayedWidget = new ErrorWidget("Please import a matrice file with \"File >> Import...\", or with \"Ctrl+O\".", "No Matrice", this);
+    setCentralWidget(displayedWidget);
 }
 
 MainWindow::~MainWindow()
@@ -47,6 +53,11 @@ void MainWindow::on_actionImport_triggered()
     else if (displayId == 102) on_actionPrimMatriceView_triggered();
     else if (displayId == 103) on_actionFloydWarshallMatriceView_triggered();
     else if (displayId == 104) on_actionClustersMatriceView_triggered();
+    else {
+        // Set placeholder widget
+        displayedWidget = new ErrorWidget("Please select a visualizer in the \"View\" menu, or with \"[Maj/Ctrl]+[1-4]\".", "No Visualizer", this);
+        setCentralWidget(displayedWidget);
+    }
 }
 
 
@@ -88,7 +99,7 @@ void MainWindow::on_actionBasicGraphView_triggered()
     
     // If there is an error, display the error widget
     } catch (const std::exception& e) {
-        displayedWidget = new ErrorWidget(e.what(), this);
+        displayedWidget = new ErrorWidget(e.what(), "Invalid Graph", this);
         setCentralWidget(displayedWidget);
     }
 }
@@ -110,7 +121,7 @@ void MainWindow::on_actionPrimGraphView_triggered()
     
     // If there is an error, display the error widget
     } catch (const std::exception& e) {
-        displayedWidget = new ErrorWidget(e.what(), this);
+        displayedWidget = new ErrorWidget(e.what(), "Invalid Graph", this);
         setCentralWidget(displayedWidget);
     }
 }
@@ -132,7 +143,7 @@ void MainWindow::on_actionClustersGraphView_triggered()
     
     // If there is an error, display the error widget
     } catch (const std::exception& e) {
-        displayedWidget = new ErrorWidget(e.what(), this);
+        displayedWidget = new ErrorWidget(e.what(), "Invalid Graph", this);
         setCentralWidget(displayedWidget);
     }
 }
@@ -154,7 +165,7 @@ void MainWindow::on_actionBasicMatriceView_triggered()
     
     // If there is an error, display the error widget
     } catch (const std::exception& e) {
-        displayedWidget = new ErrorWidget(e.what(), this);
+        displayedWidget = new ErrorWidget(e.what(), "Invalid Graph", this);
         setCentralWidget(displayedWidget);
     }
 }
@@ -176,7 +187,7 @@ void MainWindow::on_actionPrimMatriceView_triggered()
     
     // If there is an error, display the error widget
     } catch (const std::exception& e) {
-        displayedWidget = new ErrorWidget(e.what(), this);
+        displayedWidget = new ErrorWidget(e.what(), "Invalid Graph", this);
         setCentralWidget(displayedWidget);
     }
 }
@@ -198,7 +209,7 @@ void MainWindow::on_actionFloydWarshallMatriceView_triggered()
     
     // If there is an error, display the error widget
     } catch (const std::exception& e) {
-        displayedWidget = new ErrorWidget(e.what(), this);
+        displayedWidget = new ErrorWidget(e.what(), "Invalid Graph", this);
         setCentralWidget(displayedWidget);
     }
 }
@@ -220,7 +231,7 @@ void MainWindow::on_actionClustersMatriceView_triggered()
     
     // If there is an error, display the error widget
     } catch (const std::exception& e) {
-        displayedWidget = new ErrorWidget(e.what(), this);
+        displayedWidget = new ErrorWidget(e.what(), "Invalid Graph", this);
         setCentralWidget(displayedWidget);
     }
 }
