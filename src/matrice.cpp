@@ -108,6 +108,44 @@ std::string Matrice::getName(uint32_t index) const
     }
 }
 
+bool Matrice::isOriented() const
+{
+    // Check if the computation has already been done
+    if (oriented == 0) return false;
+    else if (oriented == 1) return true;
+
+    // Check for any pair (i, j) such that edge[i][j] != edge[j][i]
+    for (uint32_t i = 0; i < size; i++) {
+        for (uint32_t j = i + 1; j < size; j++) {  // j starts at i+1 to avoid checking twice and self-loops
+            if (data[i][j] != data[j][i]) {
+                oriented = 1;  // Mark as oriented
+                return true;
+            }
+        }
+    }
+    oriented = 0;  // Mark as not oriented
+    return false;
+}
+
+bool Matrice::isWeighted() const
+{
+    // Check if the computation has already been done
+    if (weighted == 0) return false;
+    else if (weighted == 1) return true;
+
+    // Check for any edge with a weight different from 0 or 1
+    for (uint32_t i = 0; i < size; i++) {
+        for (uint32_t j = 0; j < size; j++) {
+            if (data[i][j] != 0 && data[i][j] != 1) {
+                weighted = 1;  // Mark as weighted
+                return true;
+            }
+        }
+    }
+    weighted = 0;  // Mark as not weighted
+    return false;
+}
+
 /*************
 | Algorithms |
 *************/

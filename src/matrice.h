@@ -82,6 +82,22 @@ public:
      */
     std::string getName(uint32_t index) const;
 
+    /**
+     * @brief Check if the graph represented by the matrix is oriented (directed).
+     * A graph is considered oriented if there exists at least one pair (i, j) such that edge[i][j] != edge[j][i].
+     * This method is optimized to compute the orientation only once.
+     * @return True if the graph is oriented, false otherwise.
+     */
+    bool isOriented() const;
+
+    /**
+     * @brief Check if the graph represented by the matrix is weighted.
+     * A graph is considered weighted if at least one edge has a weight different from 0 or 1.
+     * This method is optimized to compute the weight status only once.
+     * @return True if the graph is weighted, false otherwise.
+     */
+    bool isWeighted() const;
+
     /*************
     | Algorithms |
     *************/
@@ -112,27 +128,6 @@ public:
     Matrice* clusterMatrice() const;
 
 private:
-    /*************
-    | Attributes |
-    *************/
-
-    /**
-     * @brief The size of the matrix (size x size).
-     */
-    uint32_t size;
-
-    /**
-     * @brief A 2D array of int64_t representing the matrix data.
-     * Using int64 allow to store an int32_t (the original data) and an uint32_t (the size of the matrix).
-     */
-    int64_t** data;
-
-    /**
-     * @brief An array of C-strings representing the names of the nodes.
-     * If nullptr, nodes are unnamed and represented by their indexes + 1.
-     */
-    std::string* names;
-
     /***********************
     | Private Constructors |
     ***********************/
@@ -171,6 +166,45 @@ private:
      */
     void dfsCollect(uint32_t id, std::vector<uint32_t>* cluster, bool* visited,
                     uint32_t* preCount = nullptr, uint32_t* postCount = nullptr) const;
+                    
+    /*************
+    | Attributes |
+    *************/
+
+    /**
+     * @brief The size of the matrix (size x size).
+     */
+    uint32_t size;
+
+    /**
+     * @brief A 2D array of int64_t representing the matrix data.
+     * Using int64 allow to store an int32_t (the original data) and an uint32_t (the size of the matrix).
+     */
+    int64_t** data;
+
+    /**
+     * @brief An array of C-strings representing the names of the nodes.
+     * If nullptr, nodes are unnamed and represented by their indexes + 1.
+     */
+    std::string* names;
+
+    /**
+     * @brief Whether the graph is oriented (directed) or not.
+     * A graph is considered oriented if there exists at least one pair (i, j) such that edge[i][j] != edge[j][i].
+     * 0 = not oriented ;
+     * 1 = oriented ;
+     * 255 = not computed yet.
+     */
+    mutable uint8_t oriented = 255;
+
+    /**
+     * @brief Whether the graph is weighted or not.
+     * A graph is considered weighted if at least one edge has a weight different from 0 or 1.
+     * 0 = not weighted ;
+     * 1 = weighted ;
+     * 255 = not computed yet.
+     */
+    mutable uint8_t weighted = 255;
 };
 
 #endif // MATRICE_H

@@ -105,24 +105,26 @@ void GraphWidget::paintEvent(QPaintEvent* event)
             // Draw the line
             painter.drawLine(line);
 
-            // Draw the arrow
-            double angle = std::atan2(-line.dy(), line.dx());
-            QPointF arrowP1 = line.p2() - QPointF(
-                std::cos(angle + M_PI / 6) * ARROW_SIZE,
-                -std::sin(angle + M_PI / 6) * ARROW_SIZE
-            );
-            QPointF arrowP2 = line.p2() - QPointF(
-                std::cos(angle - M_PI / 6) * ARROW_SIZE,
-                -std::sin(angle - M_PI / 6) * ARROW_SIZE
-            );
-            QPolygonF arrowHead;
-            arrowHead << line.p2() << arrowP1 << arrowP2;
-            painter.setBrush(Qt::white);
-            painter.drawPolygon(arrowHead);
-            painter.setBrush(Qt::NoBrush);
+            // Draw the arrow if the graph is directed
+            if (matrice->isOriented()) {
+                double angle = std::atan2(-line.dy(), line.dx());
+                QPointF arrowP1 = line.p2() - QPointF(
+                    std::cos(angle + M_PI / 6) * ARROW_SIZE,
+                    -std::sin(angle + M_PI / 6) * ARROW_SIZE
+                );
+                QPointF arrowP2 = line.p2() - QPointF(
+                    std::cos(angle - M_PI / 6) * ARROW_SIZE,
+                    -std::sin(angle - M_PI / 6) * ARROW_SIZE
+                );
+                QPolygonF arrowHead;
+                arrowHead << line.p2() << arrowP1 << arrowP2;
+                painter.setBrush(Qt::white);
+                painter.drawPolygon(arrowHead);
+                painter.setBrush(Qt::NoBrush);
+            }
 
             // Draw the edge weight near the middle of the edge, offset perpendicularly
-            {
+            if (matrice->isWeighted()) {
                 QString weight = QString::number(matrice->getEdge(i, j));
                 // Use a smaller font for edge weights
                 QFont f = painter.font();
