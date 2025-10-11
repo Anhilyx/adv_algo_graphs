@@ -143,7 +143,7 @@ Graph views display the graph visually, with named nodes and weighted edges:
 
 Nodes can be moved by clicking and dragging them with the left mouse button. It's also possible to move the entire view by clicking and dragging outside of any node.
 
-It's also possible to zoom in and out using the slider at the top right of the window.
+It's also possible to zoom in and out using the mouse wheel or the slider at the top right of the window.
 
 > For larger graphs, it's mandatory to zoom out or to move the graph, as some nodes will be outside of the view initially.
 

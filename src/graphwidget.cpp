@@ -2,7 +2,6 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QSlider>
 #include <QVBoxLayout>
 
 GraphWidget::GraphWidget(const Matrice* data, QWidget* parent):
@@ -17,8 +16,8 @@ GraphWidget::GraphWidget(const Matrice* data, QWidget* parent):
     computeNodes();
 
     // Create zoom slider
-    QSlider* zoomSlider = new QSlider(Qt::Horizontal, this);
-    zoomSlider->setRange(10, 300);        
+    zoomSlider = new QSlider(Qt::Horizontal, this);
+    zoomSlider->setRange(MIN_ZOOM, MAX_ZOOM);
     zoomSlider->setValue(100);
     zoomSlider->setFixedWidth(150);
     zoomSlider->setStyleSheet(R"(
@@ -183,6 +182,9 @@ void GraphWidget::paintEvent(QPaintEvent* event)
 
 void GraphWidget::mousePressEvent(QMouseEvent* event)
 {
+    // Skip if not a left click
+    if (event->button() != Qt::LeftButton) return;
+
     // Set the cursor to a closed hand
     setCursor(Qt::ClosedHandCursor);
 
@@ -211,7 +213,8 @@ void GraphWidget::mousePressEvent(QMouseEvent* event)
 
 void GraphWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-    Q_UNUSED(event);
+    // Skip if not a left click
+    if (event->button() != Qt::LeftButton) return;
 
     // Stop moving the node
     targetNode = nullptr;
@@ -246,6 +249,23 @@ void GraphWidget::mouseMoveEvent(QMouseEvent* event)
         graphOffset = *graphOffsetStart + delta;
         update();
     }
+}
+
+void GraphWidget::wheelEvent(QWheelEvent *event)
+{
+    // Zoom in or out based on the wheel delta
+    int delta = event->angleDelta().y();
+    if (delta > 0) zoom *= ZOOM_MULTIPLIER;
+    else if (delta < 0)  zoom /= ZOOM_MULTIPLIER;
+
+    // Clamp the zoom level
+    if (zoom < static_cast<float>(MIN_ZOOM) / 100.0f) zoom = static_cast<float>(MIN_ZOOM) / 100.0f;
+    if (zoom > static_cast<float>(MAX_ZOOM) / 100.0f) zoom = static_cast<float>(MAX_ZOOM) / 100.0f;
+
+    // Recompute node positions and update the display
+    zoomSlider->setValue(static_cast<int>(zoom * 100));
+    computeNodes();
+    update();
 }
 
 void GraphWidget::computeNodes()

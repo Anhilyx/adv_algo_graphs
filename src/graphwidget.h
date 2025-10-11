@@ -4,13 +4,19 @@
 #include "matrice.h"
 
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QPainter>
+#include <QSlider>
 #include <QWidget>
 
 #define ARROW_SIZE 10
 #define EDGE_SIZE 2
 #define NODE_SIZE 40
 #define NODE_SPACING 100
+
+#define MIN_ZOOM 20  // Minimum zoom level (in percent)
+#define MAX_ZOOM 300  // Maximum zoom level (in percent)
+#define ZOOM_MULTIPLIER 1.1f  // Multiplier for each wheel step
 
 /**
  * @brief A widget to display a Graph
@@ -57,6 +63,12 @@ protected:
      */
     void mouseMoveEvent(QMouseEvent* event) override;
 
+    /**
+     * @brief Mouse wheel event handler, to allow zooming
+     * @param event The mouse wheel event
+     */
+    void wheelEvent(QWheelEvent* event) override;
+
 private:
     /**
      * @brief Stores graphical information about a node
@@ -82,6 +94,11 @@ private:
      * @brief The matrice representing the graph
      */
     const Matrice* matrice;
+
+    /**
+     * @brief The zoom slider
+     */
+    QSlider* zoomSlider;
 
     /**
      * @brief The clusters in the matrice (a list of list of node indexes)
