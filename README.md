@@ -85,8 +85,7 @@ The general idea of the algorithm is:
 
 To import a graph, go to `File > Import...` (or use the `Ctrl + O` shortcut) and select a `.txt`.
 
-![How to import a graph (step 1)](./docs/file_menu.png)
-![How to import a graph (step 2)](./docs/import.png)
+![How to import a graph](./docs/import.png)
 
 Graphs are imported from a `.txt` file, with the following format:
 ```
@@ -123,8 +122,7 @@ There is a total of 7 views available under the `View` menu:
 - Floyd–Warshall: matrix of shortest paths (sum of weights) ; absence of path marked by red background and « - » ;
 - Cluster Matrix: matrix of adjacency between clusters (SCC).
 
-![How to display a graph/matrice (step 1)](./docs/view_menu1.png)
-![How to display a graph/matrice (step 2)](./docs/view_menu2.png)
+![How to display a graph/matrice](./docs/view_menu.png)
 
 These views can also be accessed through some shortcuts:
 |          |  Base  |  Prim  |Floyd-Warshall|Kosaraju|
@@ -167,8 +165,7 @@ The cells contain the weights of the edges, or `-` if there is no edge (weight o
 
 It's possible to export the currently displayed graph or matrix as an image. To do so, go to `File > Export...` (or use the `Ctrl + E` shortcut) and choose a name for the file.
 
-![How to export a graph (step 1)](./docs/file_menu2.png)
-![How to export a graph (step 2)](./docs/export.png)
+![How to export a graph](./docs/export.png)
 
 ---
 
