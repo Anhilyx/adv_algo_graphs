@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "errorwidget.h"
 #include "graphwidget.h"
 #include "matricewidget.h"
 
@@ -71,104 +72,153 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionBasicGraphView_triggered()
 {
-    // Set the display ID
-    displayId = 1;
+    try {
+        // Set the display ID
+        displayId = 1;
 
-    // Ignore the rest of the action if there is no matrice loaded
-    if (currentMatrice == nullptr) return;
+        // Ignore the rest of the action if there is no matrice loaded
+        if (currentMatrice == nullptr) return;
 
-    // Set the displayed matrice to the current one and update the widget
-    displayedMatrice = currentMatrice;
-    displayedWidget = new GraphWidget(displayedMatrice, this);
-    setCentralWidget(displayedWidget);
+        // Set the displayed matrice to the current one and update the widget
+        displayedMatrice = currentMatrice;
+        displayedWidget = new GraphWidget(displayedMatrice, this);
+        setCentralWidget(displayedWidget);
+    
+    // If there is an error, display the error widget
+    } catch (const std::exception& e) {
+        displayedWidget = new ErrorWidget(e.what(), this);
+        setCentralWidget(displayedWidget);
+    }
 }
 
 
 void MainWindow::on_actionPrimGraphView_triggered()
 {
-    // Set the display ID
-    displayId = 2;
+    try {
+        // Set the display ID
+        displayId = 2;
 
-    // Ignore the rest of the action if there is no matrice loaded
-    if (currentMatrice == nullptr) return;
+        // Ignore the rest of the action if there is no matrice loaded
+        if (currentMatrice == nullptr) return;
 
-    // Set the displayed matrice to the current one and update the widget
-    displayedMatrice = currentMatrice->prim();
-    displayedWidget = new GraphWidget(displayedMatrice, this);
-    setCentralWidget(displayedWidget);
+        // Set the displayed matrice to the current one and update the widget
+        displayedMatrice = currentMatrice->prim();
+        displayedWidget = new GraphWidget(displayedMatrice, this);
+        setCentralWidget(displayedWidget);
+    
+    // If there is an error, display the error widget
+    } catch (const std::exception& e) {
+        displayedWidget = new ErrorWidget(e.what(), this);
+        setCentralWidget(displayedWidget);
+    }
 }
 
 
 void MainWindow::on_actionClustersGraphView_triggered()
 {
-    // Set the display ID
-    displayId = 4;
+    try {
+        // Set the display ID
+        displayId = 4;
 
-    // Ignore the rest of the action if there is no matrice loaded
-    if (currentMatrice == nullptr) return;
+        // Ignore the rest of the action if there is no matrice loaded
+        if (currentMatrice == nullptr) return;
 
-    // Set the displayed matrice to the current one and update the widget
-    displayedMatrice = currentMatrice->clusterMatrice();
-    displayedWidget = new GraphWidget(displayedMatrice, this);
-    setCentralWidget(displayedWidget);
+        // Set the displayed matrice to the current one and update the widget
+        displayedMatrice = currentMatrice->clusterMatrice();
+        displayedWidget = new GraphWidget(displayedMatrice, this);
+        setCentralWidget(displayedWidget);
+    
+    // If there is an error, display the error widget
+    } catch (const std::exception& e) {
+        displayedWidget = new ErrorWidget(e.what(), this);
+        setCentralWidget(displayedWidget);
+    }
 }
 
 
 void MainWindow::on_actionBasicMatriceView_triggered()
 {
-    // Set the display ID
-    displayId = 101;
+    try {
+        // Set the display ID
+        displayId = 101;
 
-    // Ignore the rest of the action if there is no matrice loaded
-    if (currentMatrice == nullptr) return;
+        // Ignore the rest of the action if there is no matrice loaded
+        if (currentMatrice == nullptr) return;
 
-    // Set the displayed matrice to the current one and update the widget
-    displayedMatrice = currentMatrice;
-    displayedWidget = new MatriceWidget(displayedMatrice, this);
-    setCentralWidget(displayedWidget);
+        // Set the displayed matrice to the current one and update the widget
+        displayedMatrice = currentMatrice;
+        displayedWidget = new MatriceWidget(displayedMatrice, this);
+        setCentralWidget(displayedWidget);
+    
+    // If there is an error, display the error widget
+    } catch (const std::exception& e) {
+        displayedWidget = new ErrorWidget(e.what(), this);
+        setCentralWidget(displayedWidget);
+    }
 }
 
 
 void MainWindow::on_actionPrimMatriceView_triggered()
 {
-    // Set the display ID
-    displayId = 102;
+    try {
+        // Set the display ID
+        displayId = 102;
 
-    // Ignore the rest of the action if there is no matrice loaded
-    if (currentMatrice == nullptr) return;
+        // Ignore the rest of the action if there is no matrice loaded
+        if (currentMatrice == nullptr) return;
 
-    // Set the displayed matrice to the current one and update the widget
-    displayedMatrice = currentMatrice->prim();
-    displayedWidget = new MatriceWidget(displayedMatrice, this);
-    setCentralWidget(displayedWidget);
+        // Set the displayed matrice to the current one and update the widget
+        displayedMatrice = currentMatrice->prim();
+        displayedWidget = new MatriceWidget(displayedMatrice, this);
+        setCentralWidget(displayedWidget);
+    
+    // If there is an error, display the error widget
+    } catch (const std::exception& e) {
+        displayedWidget = new ErrorWidget(e.what(), this);
+        setCentralWidget(displayedWidget);
+    }
 }
 
 
 void MainWindow::on_actionFloydWarshallMatriceView_triggered()
 {
-    // Set the display ID
-    displayId = 103;
+    try {
+        // Set the display ID
+        displayId = 103;
 
-    // Ignore the rest of the action if there is no matrice loaded
-    if (currentMatrice == nullptr) return;
+        // Ignore the rest of the action if there is no matrice loaded
+        if (currentMatrice == nullptr) return;
 
-    // Set the displayed matrice to the current one and update the widget
-    displayedMatrice = currentMatrice->floydWarshall();
-    displayedWidget = new MatriceWidget(displayedMatrice, this);
-    setCentralWidget(displayedWidget);
+        // Set the displayed matrice to the current one and update the widget
+        displayedMatrice = currentMatrice->floydWarshall();
+        displayedWidget = new MatriceWidget(displayedMatrice, this);
+        setCentralWidget(displayedWidget);
+    
+    // If there is an error, display the error widget
+    } catch (const std::exception& e) {
+        displayedWidget = new ErrorWidget(e.what(), this);
+        setCentralWidget(displayedWidget);
+    }
 }
 
 
 void MainWindow::on_actionClustersMatriceView_triggered()
 {
-    // Set the display ID
-    displayId = 104;
+    try {
+        // Set the display ID
+        displayId = 104;
 
-    // Ignore the rest of the action if there is no matrice loaded
-    if (currentMatrice == nullptr) return;
+        // Ignore the rest of the action if there is no matrice loaded
+        if (currentMatrice == nullptr) return;
 
-    // Set the displayed matrice to the current one and update the widget
-    displayedMatrice = currentMatrice->clusterMatrice();
-    displayedWidget = new MatriceWidget(displayedMatrice, this);
-    setCentralWidget(displayedWidget);
+        // Set the displayed matrice to the current one and update the widget
+        displayedMatrice = currentMatrice->clusterMatrice();
+        displayedWidget = new MatriceWidget(displayedMatrice, this);
+        setCentralWidget(displayedWidget);
+    
+    // If there is an error, display the error widget
+    } catch (const std::exception& e) {
+        displayedWidget = new ErrorWidget(e.what(), this);
+        setCentralWidget(displayedWidget);
+    }
 }
