@@ -141,6 +141,8 @@ Graph views display the graph visually, with named nodes and weighted edges:
 
 ![Graph view example](./docs/graph_view.png)
 
+Nodes are grouped by strongly connected components (SCC), with each component having a different color.
+
 Nodes can be moved by clicking and dragging them with the left mouse button. It's also possible to move the entire view by clicking and dragging outside of any node.
 
 It's also possible to zoom in and out using the mouse wheel or the slider at the top right of the window.
