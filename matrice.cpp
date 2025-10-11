@@ -119,8 +119,8 @@ Matrice* Matrice::floydWarshall() const
     for (uint32_t i = 0; i < size; i++) {
         paths[i] = new int64_t[size];
         for (uint32_t j = 0; j < size; j++) {
-            // Initialize paths with the current edge weights, using INT64_MIN for no edge (infinite length)
-            paths[i][j] = data[i][j] == 0 ? INT64_MIN : data[i][j];
+            // Initialize paths with the current edge weights, using INT64_MAX for no edge (infinite length)
+            paths[i][j] = data[i][j] == 0 ? INT64_MAX : data[i][j];
         }
     }
 
@@ -130,11 +130,11 @@ Matrice* Matrice::floydWarshall() const
             if (i == k) continue;  // Skip self-loops
             for (uint32_t j = 0; j < size; j++) {
                 if (j == k) continue;  // Skip self-loops
-                if (paths[i][k] == INT64_MIN || paths[k][j] == INT64_MIN) continue;  // Skip "infinite" lengths
+                if (paths[i][k] == INT64_MAX || paths[k][j] == INT64_MAX) continue;  // Skip "infinite" lengths
 
                 // Update the path if a shorter one is found
                 int64_t length = paths[i][k] + paths[k][j];
-                if (length < paths[i][j] || paths[i][j] == INT64_MIN) {
+                if (length < paths[i][j]) {
                     paths[i][j] = length;
                 }
             }
@@ -155,43 +155,56 @@ Matrice* Matrice::prim() const
         }
     }
 
-    // Array to track included vertices in MST
+    // Array to track vertex data
     bool* inMST = new bool[size];
+    int64_t* distance = new int64_t[size];
+    uint32_t* parent = new uint32_t[size];
     for (uint32_t i = 0; i < size; i++) {
         inMST[i] = false;
+        distance[i] = INT64_MAX;
+        parent[i] = UINT32_MAX;
     }
 
     // Start from the first vertex
-    inMST[0] = true;
+    distance[0] = 0;
 
-    for (uint32_t i = 1; i < size; i++) { // Start at 1 since the first vertex is already included
+    for (uint32_t _ = 0; _ < size - 1; _++) {  // There will be n-1 edges
         int64_t minEdge = INT64_MAX;
-        uint32_t from = UINT32_MAX;
         uint32_t to = UINT32_MAX;
 
-        // Find the minimum edge connecting a vertex in MST to a vertex outside MST
-        for (uint32_t i = 0; i < size; i++) {
-            if (inMST[i]) {
-                for (uint32_t j = 0; j < size; j++) {
-                    if (!inMST[j] && data[i][j] != 0 && data[i][j] < minEdge) {
-                        minEdge = data[i][j];
-                        from = i;
-                        to = j;
-                    }
-                }
+        // Find the vertex with the minimum distance not yet included in the MST
+        for (uint32_t _to = 0; _to < size; _to++) {
+            if (!inMST[_to] && distance[_to] < minEdge) {
+                minEdge = distance[_to];
+                to = _to;
             }
         }
 
-        // Check that a valid edge was found (if not, the graph is not fully connected)
-        if (from == UINT32_MAX || to == UINT32_MAX) break;
-
-        // Add the found edge to the MST
-        mstData[from][to] = minEdge;
-        mstData[to][from] = minEdge;  // Add also the reverse edge, as it's an undirected graph
+        // Stop if no more new vertices are connected to the graph (effectively an invalid graph for Prim algorithm)
+        if (to == UINT32_MAX) throw std::runtime_error("The graph is not fully connected, Prim's algorithm cannot be applied.");
+        // Include the closest vertex in the MST
         inMST[to] = true;
+
+        // Update distance and parent for the adjacent vertices of the picked vertex
+        for (uint32_t from = 0; from < size; from++) {
+            if (data[from][to] != 0 && !inMST[from] && data[from][to] < distance[from]) {
+                distance[from] = data[from][to];
+                parent[from] = to;
+            }
+        }
+    }
+
+    // Build the MST from the parents
+    for (uint32_t to = 1; to < size; to++) {  // Start from the first child
+        uint32_t from = parent[to];
+        int64_t distance = data[from][to];
+        mstData[from][to] = distance;
+        mstData[to][from] = distance;  // Undirected graph
     }
 
     delete[] inMST;
+    delete[] distance;
+    delete[] parent;
 
     return new Matrice(size, mstData);  // Uses the private constructor (faster)
 }

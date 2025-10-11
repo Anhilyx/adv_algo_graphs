@@ -35,13 +35,13 @@ MatriceWidget::MatriceWidget(const Matrice* data, QWidget *parent):
     for (uint32_t i = 0; i < size; i++) {
         for (uint32_t j = 0; j < size; j++) {
             int64_t value = matrice->getEdge(i, j);
-            auto* item = new QTableWidgetItem(value == INT64_MIN
+            auto* item = new QTableWidgetItem(value == INT64_MAX
                 ? "-"
                 : QString::number(value)
             );
 
             // Set background color according to value
-            if (value == 0 || value == INT64_MIN)
+            if (value == 0 || value == INT64_MAX)
                 item->setBackground(QBrush(*colorRed));
             else
                 item->setBackground(QBrush(*colorGreen));
