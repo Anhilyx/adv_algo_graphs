@@ -67,7 +67,7 @@ The way this algorithm works is by, first, searching nodes that connect to as ma
 
 #### <u>SCC graph creation</u>
 
-This algorithm was hand-crafted to create the SCC graph from the original graph and its SCCs. However, it's higlhly likely that a similar and possibly more optimized algorithm already exists.
+This algorithm was hand-crafted to create the SCC graph from the original graph and its SCCs. However, it's highly likely that a similar and possibly more optimized algorithm already exists.
 
 The general idea of the algorithm is:
 1. Retrieve the SCCs of the original graph with Kosaraju's algorithm ;
@@ -77,7 +77,7 @@ The general idea of the algorithm is:
         - For each node `v` in the SCC represented by `j`:
             - If there is an edge from `u` to `v` in the original graph, add an edge from `i` to `j` in the new graph.
 
-> This algorithm includes 4 nested loops, but still have a complexity of `O(n^2)`, as the innermost loops will, in total, only iterate over the edges of the original graph.
+> This algorithm includes 4 nested loops, but still has a complexity of `O(n^2)`, as the innermost loops will, in total, only iterate over the edges of the original graph.
 
 ---
 
@@ -191,13 +191,13 @@ Examples graphs were, for most of them, generated using three python scripts, lo
 
 ### 1. Which algorithm should be used to find the shortest path between all pairs of nodes in a graph?
 
-To find the shortest path between all pairs of nodes in a graph, the Floyd-Warshall algorithm is the best choice. This algorithm can, with a complexity of `O(n^3)`,  find the shortest paths between all pairs of nodes in a graph. As a bonus, it also works with graphs that have negative weights (as long as there are no negative cycles, in which case the result will be incorrect, but the algorithm will not crash).
+To find the shortest path between all pairs of nodes in a graph, the *Floyd-Warshall* algorithm is the best choice. This algorithm can, with a complexity of `O(n^3)`, find the shortest paths between all pairs of nodes in a graph. As a bonus, it also works with graphs that have negative weights (as long as there are no negative cycles, in which case the result will be incorrect, but the algorithm will not crash).
 
 > Compared to this one, *Dijkstra*'s is more suited for finding the shortest path from a single source node to all other nodes in a graph with non-negative weights, while *Bellman-Ford* is also used for single-source shortest paths but can handle graphs with negative weights, at the cost of increased complexity.
 
 ### 2. Which algorithm should be used to find the minimum spanning tree of a graph (in the case of a complete graph)?
 
-For finding the minimum spanning tree (MST) of a complete graph, *Prim*'s algorithm the best choice. It's the most efficient for dense graphs (which complete graphs are the best example), with a time complexity of `O(n^2)`.
+For finding the minimum spanning tree (MST) of a complete graph, *Prim*'s algorithm is the best choice. It's the most efficient for dense graphs (which complete graphs are the best example), with a time complexity of `O(n^2)`.
 
 > *Kruskal*'s algorithm was another option, but is generally more efficient for sparse graphs, but less so for dense graphs, and even less so for complete graphs.
 
